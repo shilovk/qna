@@ -1,0 +1,18 @@
+# https://github.com/houndci/hound/blob/35450ea9ca792a51a1d531c4a39bef5daf4ec5b6/.hound.yml
+
+fail_on_violations: false
+
+rubocop:
+  enabled: true
+  config_file: .rubocop.yml
+
+scss:
+  enabled: true
+  config_file: .scss-lint.yml
+
+eslint:
+  enabled: true
+  config_file: .eslintrc
+
+coffeescript:
+  enabled: false

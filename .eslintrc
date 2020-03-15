@@ -1,0 +1,15 @@
+{
+  "asi": true,
+  "globals": {
+    "$": true
+  }
+  "parserOptions": {
+    "sourceType": "module"
+  },
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es6": true,
+    "jquery": true
+  }
+}
