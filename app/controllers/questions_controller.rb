@@ -1,5 +1,5 @@
 class QuestionsController < ApplicationController
-  before_action :load_question, only: %i[show edit]
+  before_action :load_question, only: %i[show edit update]
 
   def index
     @questions = Question.all
@@ -14,11 +14,19 @@ class QuestionsController < ApplicationController
   def edit; end
 
   def create
-    @question = Question.new(qustion_params)
+    @question = Question.new(question_params)
     if @question.save
       redirect_to @question
     else
       render :new
+    end
+  end
+
+  def update
+    if @question.update(question_params)
+      redirect_to @question
+    else
+      render :edit
     end
   end
 
@@ -28,7 +36,7 @@ class QuestionsController < ApplicationController
     @question = Question.find(params[:id])
   end
 
-  def qustion_params
+  def question_params
     params.require(:question).permit(:title, :body)
   end
 end
