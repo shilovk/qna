@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
@@ -38,7 +40,7 @@ RSpec.describe QuestionsController, type: :controller do
       end
 
       it 'redirects to updated question' do
-        patch :update, params: { id: question, question:  attributes_for(:question) }
+        patch :update, params: { id: question, question: attributes_for(:question) }
         expect(response).to redirect_to question
       end
     end
