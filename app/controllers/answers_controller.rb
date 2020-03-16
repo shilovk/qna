@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AnswersController < ApplicationController
   before_action :question, only: %i[new create]
   expose :answers, -> { question.answers }
