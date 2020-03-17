@@ -4,8 +4,11 @@ require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
   let(:question) { create(:question) }
+  let(:user) { create(:user) }
 
   describe 'POST #create' do
+    before { login(user) }
+
     context 'with valid attributes' do
       it 'saves a new question in the database' do
         expect { post :create, params: { question: attributes_for(:question) } }.to change(Question, :count).by(1)
@@ -30,6 +33,8 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'POST #update' do
+    before { login(user) }
+
     context 'with valid attributes' do
       it 'changes question attributes' do
         patch :update, params: { id: question, question: { title: 'new title', body: 'new body' } }
@@ -61,6 +66,8 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
+    before { login(user) }
+
     let!(:question) { create(:question) }
 
     it 'deletes the question' do

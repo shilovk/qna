@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 
 class QuestionsController < ApplicationController
+  before_action :authenticate_user!, except: %i[index show]
+
   expose :questions, -> { Question.all }
   expose :question
 
   def create
     if question.save
-      redirect_to question_path(question)
+      redirect_to question_path(question), notice: 'Your question was successfully created.'
     else
       render :new
     end
