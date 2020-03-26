@@ -7,7 +7,6 @@ feature 'User can create question', "
   As an authentificated user
   I'd like to be able to ask the question
 " do
-
   describe 'Authenticated user' do
     given(:user) { create(:user) }
 
