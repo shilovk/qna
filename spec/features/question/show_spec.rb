@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 feature 'User can view the questions and answers to it', "
@@ -21,7 +23,7 @@ feature 'User can view the questions and answers to it', "
       expect(page).to have_content question.title
       expect(page).to have_content question.body
 
-      question.answers.each  do |answer|
+      question.answers.each do |answer|
         expect(page).to have_content answer.body
       end
     end
@@ -29,11 +31,11 @@ feature 'User can view the questions and answers to it', "
 
   scenario 'Unauthenticated user views question with it answers' do
     visit question_path(question)
-    
+
     expect(page).to have_content question.title
     expect(page).to have_content question.body
 
-    question.answers.each  do |answer|
+    question.answers.each do |answer|
       expect(page).to have_content answer.body
     end
   end

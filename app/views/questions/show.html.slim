@@ -2,3 +2,5 @@ h1= question.title
 b= question.body
 
 = render question.answers
+
+= render template: 'answers/_form', locals: { question: question, answer: question.answers.new }
