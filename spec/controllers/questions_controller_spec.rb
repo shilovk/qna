@@ -7,9 +7,9 @@ RSpec.describe QuestionsController, type: :controller do
   let(:question) { create(:question, user: user) }
 
   describe 'POST #create' do
-    before {
+    before do
       login(user)
-    }
+    end
 
     context 'with valid attributes' do
       it 'saves a new question in the database' do

@@ -11,7 +11,6 @@ feature 'User can get list of questions', "
   given!(:questions) { create_list(:question, 3, user: user) }
 
   describe 'Authenticated user' do
-
     background do
       sign_in(user)
 
