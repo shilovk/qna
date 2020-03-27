@@ -7,10 +7,10 @@ feature 'User can get list of questions', "
   As an authenticated and unauthenticated user
   I'd like to be able to view questions list
 " do
-  given!(:questions) { create_list(:question, 3) }
+  given(:user) { create(:user) }
+  given!(:questions) { create_list(:question, 3, user: user) }
 
   describe 'Authenticated user' do
-    given(:user) { create(:user) }
 
     background do
       sign_in(user)

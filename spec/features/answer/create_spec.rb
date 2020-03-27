@@ -7,10 +7,10 @@ feature 'User can create question', "
   As an authenticated user
   I'd like to be able to answer the question
 " do
-  given!(:question) { create(:question) }
+  given(:user) { create(:user) }
+  given!(:question) { create(:question, user: user) }
 
   describe 'Authenticated user' do
-    given(:user) { create(:user) }
 
     background do
       sign_in(user)
@@ -18,7 +18,7 @@ feature 'User can create question', "
       visit question_path(question)
     end
 
-    scenario 'create an answer to the question' do
+    scenario 'creates an answer to the question' do
       fill_in 'Body', with: "Test answer's body"
       click_on 'Create answer'
 
@@ -27,7 +27,7 @@ feature 'User can create question', "
     end
   end
 
-  scenario 'Unauthenticated user create an answer to the question' do
+  scenario 'Unauthenticated user creates an answer to the question' do
     visit question_path(question)
 
     fill_in 'Body', with: "Test answer's body"

@@ -7,12 +7,11 @@ feature 'User can view the questions and answers to it', "
   As an authenticated and unauthenticated user
   I'd like to be able to view the question with it answers
 " do
-  given!(:question) { create(:question) }
-  given!(:answers) { create_list(:answer, 3, question: question) }
+  given(:user) { create(:user) }
+  given!(:question) { create(:question, user: user) }
+  given!(:answers) { create_list(:answer, 3, question: question, user: user) }
 
   describe 'Authenticated user' do
-    given(:user) { create(:user) }
-
     background do
       sign_in(user)
 
