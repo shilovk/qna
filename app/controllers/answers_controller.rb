@@ -19,10 +19,10 @@ class AnswersController < ApplicationController
   def destroy
     answer = Answer.find(params[:id])
     message = if current_user&.author?(answer)
-      answer.destroy
-      { notice: 'Your answer was succesfully deleted.' }
-    else
-      { alert: 'You are not the author of this question.' }
+                answer.destroy
+                { notice: 'Your answer was succesfully deleted.' }
+              else
+                { alert: 'You are not the author of this question.' }
     end
 
     redirect_to question_path(answer.question), message
