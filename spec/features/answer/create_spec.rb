@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-feature 'User can create question', "
+feature 'User can create answer', "
   In order to create an answer for the question
   As an authenticated user
   I'd like to be able to answer the question
@@ -21,8 +21,14 @@ feature 'User can create question', "
       fill_in 'Body', with: "Test answer's body"
       click_on 'Create answer'
 
-      expect(page).to have_content 'Your answer succesfully created'
+      expect(page).to have_content 'Your answer succesfully created.'
       expect(page).to have_content "Test answer's body"
+    end
+
+    scenario 'create an answer with errors' do
+      click_on 'Create answer'
+
+      expect(page).to have_content "Body can't be blank"
     end
   end
 

@@ -1,30 +1,31 @@
 # frozen_string_literal: true
 
 class AnswersController < ApplicationController
-  before_action :authenticate_user!, except: %i[index show]
-
-  before_action :question, only: %i[new create]
-  expose :answers, -> { question.answers }
+  before_action :authenticate_user!
+  before_action :question, only: %i[create]
   expose :answer
 
   def create
-    answer = @question.answers.new(answer_params)
+    answer = question.answers.new(answer_params)
     answer.user = current_user
 
     if answer.save
       redirect_to question_path(@question), notice: 'Your answer succesfully created.'
     else
-      render :new
+      render 'questions/show', locals: { question: @question, answer: answer }
     end
   end
 
   def destroy
-    if current_user&.author?(answer)
+    answer = Answer.find(params[:id])
+    message = if current_user&.author?(answer)
       answer.destroy
-      redirect_to question_path(answer.question), notice: 'Your answer was succesfully deleted.'
+      { notice: 'Your answer was succesfully deleted.' }
     else
-      redirect_to question, alert: 'You are not the author of this question.'
+      { alert: 'You are not the author of this question.' }
     end
+
+    redirect_to question_path(answer.question), message
   end
 
   private

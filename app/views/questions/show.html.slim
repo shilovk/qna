@@ -6,4 +6,5 @@ b= question.body
 
 = render question.answers
 
-= render template: 'answers/_form', locals: { question: question, answer: question.answers.new }
+- answer = answer || question.answers.new
+= render template: 'answers/_form', locals: { question: question, answer: answer }
