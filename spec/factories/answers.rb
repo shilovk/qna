@@ -2,7 +2,9 @@
 
 FactoryBot.define do
   factory :answer do
-    body { 'MyText' }
+    user
+    association :question
+    body { 'MyAnswer' }
 
     trait :invalid do
       body { nil }

@@ -1,1 +1,9 @@
 h1= question.title
+b= question.body
+
+- if current_user&.author?(question)
+  p= link_to 'Delete', question_path(question), method: :delete, data: { confirm: 'Are you sure?' }
+
+= render question.answers
+- answer = @answer || question.answers.new
+= render template: 'answers/_form', locals: { question: question, answer: answer }
