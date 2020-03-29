@@ -16,7 +16,7 @@ RSpec.describe QuestionsController, type: :controller do
 
       it 'question belongs to author' do
         post :create, params: { question: attributes_for(:question) }
-        question.user_id == user.id
+        expect(question.user_id).to eq(user.id)
       end
 
       it 'redirects to show view' do

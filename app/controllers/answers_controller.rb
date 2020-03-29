@@ -3,16 +3,15 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
   before_action :question, only: %i[create]
-  expose :answer
 
   def create
-    answer = question.answers.new(answer_params)
-    answer.user = current_user
+    @answer = question.answers.new(answer_params)
+    @answer.user = current_user
 
-    if answer.save
-      redirect_to question_path(@question), notice: 'Your answer succesfully created.'
+    if @answer.save
+      redirect_to question_path(question), notice: 'Your answer succesfully created.'
     else
-      render 'questions/show', locals: { question: @question, answer: answer }
+      render 'questions/show'
     end
   end
 
@@ -33,6 +32,8 @@ class AnswersController < ApplicationController
   def question
     @question = Question.find(params[:question_id])
   end
+
+  helper_method :question
 
   def answer_params
     params.require(:answer).permit(:body)
