@@ -5,14 +5,7 @@ class AnswersController < ApplicationController
   before_action :question, only: %i[create]
 
   def create
-    @answer = question.answers.new(answer_params)
-    @answer.user = current_user
-
-    if @answer.save
-      redirect_to question_path(question), notice: 'Your answer succesfully created.'
-    else
-      render 'questions/show'
-    end
+    @answer = question.answers.create(answer_params.merge(user_id: current_user.id))
   end
 
   def destroy
