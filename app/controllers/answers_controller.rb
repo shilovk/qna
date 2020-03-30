@@ -1,11 +1,17 @@
 # frozen_string_literal: true
 
 class AnswersController < ApplicationController
-  before_action :authenticate_user!
+  # before_action :authenticate_user!
   before_action :question, only: %i[create]
 
   def create
     @answer = question.answers.create(answer_params.merge(user_id: current_user.id))
+  end
+
+  def update
+    @answer = Answer.find(params[:id])
+    @answer.update(answer_params)
+    @question = @answer.question
   end
 
   def destroy

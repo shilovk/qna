@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe AnswersController, type: :controller do
   let(:user) { create(:user) }
   let(:question) { create(:question, user: user) }
-  let(:answer) { create(:answer, question_id: question) }
+  let(:answer) { create(:answer, question: question) }
 
   describe 'POST #create' do
     before { login(user) }
@@ -31,7 +31,7 @@ RSpec.describe AnswersController, type: :controller do
         expect { post :create, params: { answer: attributes_for(:answer, :invalid), question_id: question }, format: :js }.to_not change(Answer, :count)
       end
 
-      it 're-renders create template' do
+      it 'renders create template' do
         post :create, params: { answer: attributes_for(:answer, :invalid), question_id: question, format: :js }
         expect(response).to render_template :create
       end
@@ -64,6 +64,37 @@ RSpec.describe AnswersController, type: :controller do
       it 'redirects to question show view' do
         delete :destroy, params: { id: answer }
         expect(response).to redirect_to question_path(question)
+      end
+    end
+  end
+
+  describe 'PATCH #update' do
+    context 'with valid attributes' do
+      it 'changes answer attributes' do
+        patch :update, params: { id: answer, answer: { body: 'new body' }, format: :js }
+        answer.reload
+        expect(answer.body).to eq 'new body'
+      end
+
+      it 'renders update view' do
+        patch :update, params: { id: answer, answer: { body: 'new body' }, format: :js }
+        answer.reload
+        expect(response).to render_template :update
+      end
+    end
+
+    context 'with invalid attributes' do
+      it 'does not change answer attributes' do
+        expect do
+          patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid), format: :js }
+        end.to_not change(answer, :body)
+
+      end
+
+      it 'renders update view' do
+        patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid), format: :js }
+        answer.reload
+        expect(response).to render_template :update
       end
     end
   end
