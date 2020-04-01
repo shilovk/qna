@@ -28,7 +28,7 @@ feature 'User can set best answer', "
     visit question_path(question)
 
     within '.answers' do
-     expect(page).to_not have_link 'Set the best'
+      expect(page).to_not have_link 'Set the best'
     end
   end
 

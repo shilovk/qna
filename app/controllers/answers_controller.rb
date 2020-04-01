@@ -11,7 +11,7 @@ class AnswersController < ApplicationController
 
   def update
     return unless current_user&.author?(@answer)
-    
+
     @answer.update(answer_params)
     @question = @answer.question
   end

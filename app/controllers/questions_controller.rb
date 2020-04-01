@@ -18,7 +18,7 @@ class QuestionsController < ApplicationController
 
   def update
     return unless current_user&.author?(question)
-    
+
     question.update(question_params)
     @hide_answers = true
   end
