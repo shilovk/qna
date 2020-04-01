@@ -1,5 +1,3 @@
-require: rubocop-rails
-
 # Common configuration.
 
 AllCops:
