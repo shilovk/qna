@@ -1,8 +1,6 @@
-var errors = document.querySelector('.answer-errors');
+var answer = document.querySelector('#answer-<%= @answer.id %>');
+var errors = answer.querySelector('.answer-errors');
 errors.innerHTML = '<%= render 'shared/errors', resource: @answer %>';
-
 <% unless @answer.errors.present? %>
-  var answers = document.querySelector('.answers');
-  answers.innerHTML = '<%= j render @question.answers %>';
-  answer_body.value = '';
+  answer.innerHTML = '<%= j render @answer %>';
 <% end %>

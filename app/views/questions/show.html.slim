@@ -1,9 +1,28 @@
-h1= question.title
-b= question.body
+.question
+  .question-errors
+  h2
+    = question.title
+  p
+    = question.body
 
-- if current_user&.author?(question)
-  p= link_to 'Delete', question_path(question), method: :delete, data: { confirm: 'Are you sure?' }
+  - if user_signed_in?
+    p
+      = link_to 'Edit question', '#', class: 'edit-question-link'
 
-.answers= render question.answers
-- answer = @answer || question.answers.new
-= render template: 'answers/_form', locals: { question: question, answer: answer }
+    = form_with model: question, class: 'hidden', html: { id: "edit-question" } do |f|
+      = f.label :title
+      = f.text_field :title
+      = f.label :body
+      = f.text_area :body
+      = f.submit 'Save question'
+
+  - if current_user&.author?(question)
+    p
+      = link_to 'Delete', question_path(question), method: :delete, data: { confirm: 'Are you sure?' }
+
+- if @hide_answers.nil?
+  .answers
+    = render question.answers
+
+    - answer = @answer || question.answers.new
+    = render template: 'answers/_form', locals: { question: question, answer: answer }

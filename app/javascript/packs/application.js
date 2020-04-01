@@ -17,4 +17,5 @@ require("channels")
 
 import "../src/application"
 
-require("./answers");
+require("./answers")
+require("./questions")

@@ -6,10 +6,9 @@ RSpec.describe AnswersController, type: :controller do
   let(:user) { create(:user) }
   let(:question) { create(:question, user: user) }
   let(:answer) { create(:answer, question: question) }
+  before { login(user) }
 
   describe 'POST #create' do
-    before { login(user) }
-
     context 'with valid attributes' do
       it 'saves a new answer for question in the database' do
         expect { post :create, params: { answer: attributes_for(:answer), question_id: question }, format: :js }.to change(question.answers, :count).by(1)
@@ -39,8 +38,6 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    before { login(user) }
-
     let!(:answer) { create(:answer, question: question, user: user) }
 
     context 'User tries to delete own answer' do
@@ -77,7 +74,7 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       it 'renders update view' do
-        patch :update, params: { id: answer, answer: { body: 'new body' }, format: :js }
+        patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js
         answer.reload
         expect(response).to render_template :update
       end
@@ -86,14 +83,13 @@ RSpec.describe AnswersController, type: :controller do
     context 'with invalid attributes' do
       it 'does not change answer attributes' do
         expect do
-          patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid), format: :js }
+          patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid) }, format: :js
         end.to_not change(answer, :body)
 
       end
 
-      it 'renders update view' do
-        patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid), format: :js }
-        answer.reload
+      it 'renders update template' do
+        patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid) }, format: :js
         expect(response).to render_template :update
       end
     end
