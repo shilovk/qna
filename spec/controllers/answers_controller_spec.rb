@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe AnswersController, type: :controller do
   let(:user) { create(:user) }
   let(:question) { create(:question, user: user) }
-  let(:answer) { create(:answer, question: question) }
+  let(:answer) { create(:answer, question: question, user: user) }
   before { login(user) }
 
   describe 'POST #create' do
@@ -42,12 +42,12 @@ RSpec.describe AnswersController, type: :controller do
 
     context 'User tries to delete own answer' do
       it 'can to delete the answer' do
-        expect { delete :destroy, params: { id: answer } }.to change(Answer, :count).by(-1)
+        expect { delete :destroy, params: { id: answer }, format: :js }.to change(Answer, :count).by(-1)
       end
 
-      it 'redirects to question show view' do
-        delete :destroy, params: { id: answer }
-        expect(response).to redirect_to question_path(question)
+      it 'render destroy template' do
+        delete :destroy, params: { id: answer }, format: :js
+        expect(response).to render_template :destroy
       end
     end
 
@@ -55,12 +55,12 @@ RSpec.describe AnswersController, type: :controller do
       before { sign_in(create(:user)) }
 
       it 'can not to delete the answer' do
-        expect { delete :destroy, params: { id: answer } }.to_not change(Answer, :count)
+        expect { delete :destroy, params: { id: answer }, format: :js }.to_not change(Answer, :count)
       end
 
-      it 'redirects to question show view' do
-        delete :destroy, params: { id: answer }
-        expect(response).to redirect_to question_path(question)
+      it 'render destroy template' do
+        delete :destroy, params: { id: answer }, format: :js
+        expect(response).to render_template :destroy
       end
     end
   end
@@ -85,12 +85,44 @@ RSpec.describe AnswersController, type: :controller do
         expect do
           patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid) }, format: :js
         end.to_not change(answer, :body)
-
       end
 
       it 'renders update template' do
         patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid) }, format: :js
         expect(response).to render_template :update
+      end
+    end
+
+    context 'User tries to update not own answer' do
+      before { sign_in(create(:user)) }
+
+      it 'does not change answer attributes' do
+        old_body = answer.body
+        patch :update, params: { id: answer, answer: { body: 'new body' }, format: :js }
+        answer.reload
+        expect(answer.body).to eq old_body
+      end
+    end
+  end
+
+  describe 'PATCH #best' do
+    context 'user set a best answer to own question' do
+      it 'chooses the answer as the best' do
+        patch :best, params: { id: answer }, format: :js
+        answer.reload
+        expect(answer).to be_best
+      end
+    end
+
+    context 'user tries to set a best answer to not own question' do
+      let(:other_answer) { create(:answer, :best, question: question) }
+
+      it 'does not choose the answer as the best' do
+        sign_in(create(:user))
+
+        patch :best, params: { id: answer }, format: :js
+        answer.reload
+        expect(answer).not_to be_best
       end
     end
   end

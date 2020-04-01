@@ -30,7 +30,6 @@ feature 'User can edit answer', "
         fill_in 'Change answer', with: 'edited answer'
         click_on 'Save answer'
 
-
         expect(page).to_not have_content answer.body
         expect(page).to have_content 'edited answer'
         expect(page).to_not have_selector 'textarea'

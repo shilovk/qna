@@ -68,6 +68,17 @@ RSpec.describe QuestionsController, type: :controller do
         expect(response).to render_template :update
       end
     end
+
+    context 'User tries to update not own question' do
+      before { sign_in(create(:user)) }
+
+      it 'does not change question attributes' do
+        old_body = question.body
+        patch :update, params: { id: question, question: { body: 'new body' }, format: :js }
+        question.reload
+        expect(question.body).to eq old_body
+      end
+    end
   end
 
   describe 'DELETE #destroy' do

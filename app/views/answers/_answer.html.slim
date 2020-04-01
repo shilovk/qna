@@ -1,17 +1,29 @@
 - if answer.persisted?
   div id="answer-#{answer.id}"
     .answer-errors
-    p= answer.body
+
+    - if answer.best
+      b Best answer
+
+    p
+     = answer.body
+
 
     - if current_user&.author?(answer)
-      p= link_to 'Edit answer', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
+      - unless answer.best
+        p
+          = link_to 'Set the best', best_answer_path(answer), id: "best-answer-#{answer.id}", remote: true, method: :patch
+
+      p
+        = link_to 'Edit answer', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
 
       = form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|
         = f.label :body, 'Change answer'
         = f.text_area :body
         = f.submit 'Save answer'
 
-      p= link_to 'Delete answer',
+      p
+        = link_to 'Delete answer',
                   answer_path(answer),
                   method: :delete,
                   data: { confirm: 'Are you sure?' }, remote: true
