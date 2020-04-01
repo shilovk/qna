@@ -47,5 +47,12 @@ feature 'User can edit his question', "
     end
   end
 
-  scenario "Authenticated user tries to edit other user's question"
+  scenario "Authenticated user tries to edit other user's question", js: true do
+    sign_in(other_user)
+    visit question_path(question)
+
+    within '.question' do
+      expect(page).to_not have_link 'Edit question'
+    end
+  end
 end
