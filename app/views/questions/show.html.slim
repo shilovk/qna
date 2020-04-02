@@ -1,19 +1,20 @@
 .question
   .question-errors
   h2
-    = question.title
+    = @question.title
   p
-    = question.body
+    = @question.body
 
-  - if question.file.attached?
-    p
-      = link_to question.file.filename.to_s, url_for(question.file)
+  - if @question.files.attached?
+    - @question.files.each do |file|
+      p
+        = link_to file.filename.to_s, url_for(file)
 
-  - if current_user&.author?(question)
+  - if current_user&.author?(@question)
     p
       = link_to 'Edit question', '#', class: 'edit-question-link'
 
-    = form_with model: question, class: 'hidden', html: { id: "edit-question" } do |f|
+    = form_with model: @question, class: 'hidden', html: { id: "edit-question" } do |f|
       = f.label :title
       = f.text_field :title
       = f.label :body

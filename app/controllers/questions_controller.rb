@@ -2,6 +2,7 @@
 
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: %i[index show]
+  before_action :load_question, only: %i[show edit update]
 
   expose :questions, -> { Question.all }
   expose :question
@@ -17,9 +18,9 @@ class QuestionsController < ApplicationController
   end
 
   def update
-    return unless current_user&.author?(question)
+    return unless current_user&.author?(@question)
 
-    question.update(question_params)
+    @question.update(question_params)
     @hide_answers = true
   end
 
@@ -34,7 +35,11 @@ class QuestionsController < ApplicationController
 
   private
 
+  def load_question
+    @question = Question.with_attached_files.find(params[:id])
+  end
+
   def question_params
-    params.require(:question).permit(:title, :body, :file)
+    params.require(:question).permit(:title, :body, files: [])
   end
 end
