@@ -26,7 +26,7 @@
 
 - if @hide_answers.nil?
   .answers
-    = render question.answers.order(best: :desc)
+    = render question.answers.with_attached_files.order(best: :desc)
 
   - answer = @answer || question.answers.new
   = render template: 'answers/_form', locals: { question: question, answer: answer }

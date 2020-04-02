@@ -3,7 +3,7 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
   before_action :question, only: :create
-  before_action :set_answer, only: %i[update destroy best]
+  before_action :load_answer, only: %i[update destroy best]
 
   def create
     @answer = question.answers.create(answer_params.merge(user_id: current_user.id))
@@ -40,11 +40,11 @@ class AnswersController < ApplicationController
 
   helper_method :question
 
-  def set_answer
-    @answer = Answer.find(params[:id])
+  def load_answer
+    @answer = Answer.with_attached_files.find(params[:id])
   end
 
   def answer_params
-    params.require(:answer).permit(:body)
+    params.require(:answer).permit(:body, files: [])
   end
 end
