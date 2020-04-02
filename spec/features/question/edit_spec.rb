@@ -53,7 +53,7 @@ feature 'User can edit his question', "
 
         click_on 'Save question'
 
-        expect(page).to_not have_selector 'file'
+        expect(page).to_not have_selector "input[multiple='multiple'][type='file']"
         expect(page).to have_link 'rails_helper.rb'
         expect(page).to have_link 'spec_helper.rb'
       end
