@@ -14,16 +14,16 @@ feature 'User can delete own answer', "
   describe 'Authenticated user' do
     given(:user) { create(:user) }
 
-    scenario 'deletes own question' do
+    scenario 'deletes own question', js: true do
       sign_in(author)
       visit question_path(question)
       click_on 'Delete answer'
+      page.driver.browser.switch_to.alert.accept
 
-      expect(page).to have_content 'Your answer was succesfully deleted.'
       expect(page).to_not have_content answer.body
     end
 
-    scenario 'deletes not own question' do
+    scenario 'deletes not own question', js: true do
       sign_in(user)
       visit question_path(question)
 
@@ -31,7 +31,7 @@ feature 'User can delete own answer', "
     end
   end
 
-  scenario 'Unauthenticated user tries to deletes an answer' do
+  scenario 'Unauthenticated user tries to deletes an answer', js: true do
     visit question_path(question)
 
     expect(page).to_not have_link 'Delete answer'

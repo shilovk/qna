@@ -1,0 +1,9 @@
+var errors = document.querySelector('.answer-errors');
+errors.innerHTML = '<%= render 'shared/errors', resource: @answer %>';
+
+<% if @answer.persisted? %>
+  var answers = document.querySelector('.answers');
+  answers.insertAdjacentHTML('beforeend', '<%= j render @answer %>');
+  var answerBody = document.querySelector('.new-answer #answer_body');
+  answerBody.value = '';
+<% end %>

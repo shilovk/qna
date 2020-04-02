@@ -30,7 +30,7 @@ RSpec.describe QuestionsController, type: :controller do
         expect { post :create, params: { question: attributes_for(:question, :invalid) } }.to_not change(Question, :count)
       end
 
-      it 're-renders new view' do
+      it 'renders new template' do
         post :create, params: { question: attributes_for(:question, :invalid) }
         expect(response).to render_template :new
       end
@@ -42,21 +42,21 @@ RSpec.describe QuestionsController, type: :controller do
 
     context 'with valid attributes' do
       it 'changes question attributes' do
-        patch :update, params: { id: question, question: { title: 'new title', body: 'new body' } }
+        patch :update, params: { id: question, question: { title: 'new title', body: 'new body' } }, format: :js
         question.reload
 
         expect(question.title).to eq 'new title'
         expect(question.body).to eq 'new body'
       end
 
-      it 'redirects to updated question' do
-        patch :update, params: { id: question, question: attributes_for(:question) }
-        expect(response).to redirect_to question
+      it 'renders update template' do
+        patch :update, params: { id: question, question: attributes_for(:question), format: :js }
+        expect(response).to render_template :update
       end
     end
 
     context 'with invalid attributes' do
-      before { patch :update, params: { id: question, question: attributes_for(:question, :invalid) } }
+      before { patch :update, params: { id: question, question: attributes_for(:question, :invalid) }, format: :js }
       it 'does not change question' do
         question.reload
 
@@ -64,8 +64,19 @@ RSpec.describe QuestionsController, type: :controller do
         expect(question.body).to eq 'MyText'
       end
 
-      it 're-renders edit view' do
-        expect(response).to render_template :edit
+      it 'renders update template' do
+        expect(response).to render_template :update
+      end
+    end
+
+    context 'User tries to update not own question' do
+      before { sign_in(create(:user)) }
+
+      it 'does not change question attributes' do
+        old_body = question.body
+        patch :update, params: { id: question, question: { body: 'new body' }, format: :js }
+        question.reload
+        expect(question.body).to eq old_body
       end
     end
   end

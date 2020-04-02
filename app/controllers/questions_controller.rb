@@ -17,11 +17,10 @@ class QuestionsController < ApplicationController
   end
 
   def update
-    if question.update(question_params)
-      redirect_to question_path(question)
-    else
-      render :edit
-    end
+    return unless current_user&.author?(question)
+
+    question.update(question_params)
+    @hide_answers = true
   end
 
   def destroy

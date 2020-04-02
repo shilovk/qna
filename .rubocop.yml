@@ -1,5 +1,3 @@
-# require: rubocop-rails
-
 # Common configuration.
 
 AllCops:
@@ -34,8 +32,6 @@ AllCops:
   # the `--only-guide-cops` option.
   StyleGuideCopsOnly: false
 
-  Rails:
-    Enabled: true
   # All cops except the ones configured `Enabled: false` in this file are enabled by default.
   # Change this behavior by overriding either `DisabledByDefault` or `EnabledByDefault`.
   # When `DisabledByDefault` is `true`, all cops in the default configuration
@@ -103,3 +99,15 @@ Style/FrozenStringLiteralComment:
 
 Style/StringLiterals:
   Enabled: false
+
+Style/HashEachMethods:
+  Enabled: true
+
+Style/HashTransformKeys:
+  Enabled: true
+
+Style/HashTransformValues:
+  Enabled: true
+
+Metrics/BlockLength:
+  Max: 30

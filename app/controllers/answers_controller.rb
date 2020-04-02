@@ -2,29 +2,34 @@
 
 class AnswersController < ApplicationController
   before_action :authenticate_user!
-  before_action :question, only: %i[create]
+  before_action :question, only: :create
+  before_action :set_answer, only: %i[update destroy best]
 
   def create
-    @answer = question.answers.new(answer_params)
-    @answer.user = current_user
+    @answer = question.answers.create(answer_params.merge(user_id: current_user.id))
+  end
 
-    if @answer.save
-      redirect_to question_path(question), notice: 'Your answer succesfully created.'
-    else
-      render 'questions/show'
-    end
+  def update
+    return unless current_user&.author?(@answer)
+
+    @answer.update(answer_params)
+    @question = @answer.question
   end
 
   def destroy
-    answer = Answer.find(params[:id])
-    message = if current_user&.author?(answer)
-                answer.destroy
+    message = if current_user&.author?(@answer)
+                @answer.destroy
                 { notice: 'Your answer was succesfully deleted.' }
               else
                 { alert: 'You are not the author of this question.' }
     end
+  end
 
-    redirect_to question_path(answer.question), message
+  def best
+    return unless current_user&.author?(@answer)
+
+    @answer.set_best
+    @question = @answer.question
   end
 
   private
@@ -34,6 +39,10 @@ class AnswersController < ApplicationController
   end
 
   helper_method :question
+
+  def set_answer
+    @answer = Answer.find(params[:id])
+  end
 
   def answer_params
     params.require(:answer).permit(:body)
