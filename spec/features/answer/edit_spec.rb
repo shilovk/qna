@@ -58,6 +58,14 @@ feature 'User can edit answer', "
         expect(page).to have_link 'spec_helper.rb'
       end
     end
+
+    scenario 'deletes file on his answer' do
+      click_on 'Remove file'
+
+      expect(page).to have_content 'Your file succesfully deleted.'
+      expect(page).to_not have_link 'rails_helper.rb'
+      expect(page).to_not have_content answer.files.first
+    end
   end
 
   describe 'Authenticated user that not author of answer' do
