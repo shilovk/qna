@@ -9,6 +9,8 @@
     - @question.files.each do |file|
       p
         = link_to file.filename.to_s, url_for(file)
+        - if current_user&.author?(@question)
+          = link_to 'Remove file', attachment_path(file), method: :delete, data: { confirm: 'Are you sure?' }
 
   - if current_user&.author?(@question)
     p
