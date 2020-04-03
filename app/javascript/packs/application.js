@@ -18,5 +18,6 @@ const imagePath = (name) => images(name, true)
 
 import "../src/application"
 
+require("./direct_uploads")
 require("./answers")
 require("./questions")
