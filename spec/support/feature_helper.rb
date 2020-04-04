@@ -15,4 +15,9 @@ module FeatureHelpers
     fill_in 'Password confirmation', with: user.password_confirmation
     click_on 'Sign up'
   end
+
+  def sign_out
+    visit root_path
+    click_on 'Log out'
+  end
 end

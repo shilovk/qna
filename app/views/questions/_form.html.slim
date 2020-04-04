@@ -1,4 +1,5 @@
-p= render 'shared/errors', resource: question
+p
+  = render 'shared/errors', resource: question
 
 = form_with model: question, local: true do |f|
   p
@@ -9,4 +10,9 @@ p= render 'shared/errors', resource: question
     = f.label :body
     = f.text_area :body
 
-  p= f.submit 'Ask'
+  p
+    = f.label :files
+    = f.file_field :files, multiple: true, direct_upload: true
+
+  p
+    = f.submit 'Ask'

@@ -8,9 +8,9 @@ feature 'User can edit answer', "
   I'd like to be able to edit my own answer for the question
 " do
   given!(:user) { create(:user) }
-  given!(:question) { create(:question) }
-  given!(:answer) { create(:answer, question: question, user: user) }
   given!(:other_user) { create(:user) }
+  given!(:question) { create(:question) }
+  given!(:answer) { create(:answer, :with_file, question: question, user: user) }
 
   scenario 'Unauthenticated can not edit answer' do
     visit question_path(question)
@@ -18,7 +18,7 @@ feature 'User can edit answer', "
     expect(page).to_not have_link 'Edit answer'
   end
 
-  describe 'authenticated use' do
+  describe 'Authenticated user' do
     background do
       sign_in user
       visit question_path(question)
@@ -45,14 +45,45 @@ feature 'User can edit answer', "
         expect(page).to have_content "Body can't be blank"
       end
     end
+
+    scenario 'edits his answer with attached files', js: true do
+      within ".answers #answer-#{answer.id}" do
+        click_on 'Edit'
+
+        attach_file 'Files', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
+
+        click_on 'Save answer'
+
+        expect(page).to have_link 'rails_helper.rb'
+        expect(page).to have_link 'spec_helper.rb'
+      end
+    end
+
+    scenario 'deletes file on his answer' do
+      click_on 'Remove file'
+
+      expect(page).to have_content 'Your file succesfully deleted.'
+      expect(page).to_not have_link 'rails_helper.rb'
+      expect(page).to_not have_content answer.files.first
+    end
   end
 
-  scenario "Authenticated user tries to edit other user's answer", js: true do
-    sign_in(other_user)
-    visit question_path(question)
+  describe 'Authenticated user that not author of answer' do
+    background do
+      sign_in(other_user)
+      visit question_path(question)
+    end
 
-    within '.answers' do
-      expect(page).to_not have_link 'Edit answer'
+    scenario 'tries to edit answer', js: true do
+      within '.answers' do
+        expect(page).to_not have_link 'Edit answer'
+      end
+    end
+
+    scenario 'tries to delete file on answer' do
+      within '.answers' do
+        expect(page).to_not have_link 'Remove file'
+      end
     end
   end
 end

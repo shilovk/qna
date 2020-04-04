@@ -8,6 +8,12 @@
     p
      = answer.body
 
+    - if answer.files.attached?
+      - answer.files.each do |file|
+        p
+          = link_to file.filename.to_s, url_for(file)
+          - if current_user&.author?(answer)
+            = link_to 'Remove file', attachment_path(file), method: :delete, data: { confirm: 'Are you sure?' }
 
     - if current_user&.author?(answer)
       - unless answer.best
@@ -20,6 +26,8 @@
       = form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|
         = f.label :body, 'Change answer'
         = f.text_area :body
+        = f.label :files
+        = f.file_field :files, multiple: true, direct_upload: true
         = f.submit 'Save answer'
 
       p
