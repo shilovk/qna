@@ -6,6 +6,23 @@ RSpec.describe QuestionsController, type: :controller do
   let(:user) { create(:user) }
   let(:question) { create(:question, user: user) }
 
+  describe 'GET #new' do
+    before { login(user) }
+    before { get :new }
+
+    it 'assings a new Question to @question' do
+      expect(assigns(:question)).to be_a_new(Question)
+    end
+
+    it 'assings a new Question to @question' do
+      expect(assigns(:question).links.first).to be_a_new(Link)
+    end
+
+    it 'renders new view' do
+      expect(response).to render_template :new
+    end
+  end
+
   describe 'POST #create' do
     before { login(user) }
 

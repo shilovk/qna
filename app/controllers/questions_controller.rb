@@ -7,11 +7,16 @@ class QuestionsController < ApplicationController
   expose :questions, -> { Question.all }
   expose :question
 
-  def create
-    question.user = current_user
+  def new
+    @question = Question.new
+    @question.links.new # .build
+  end
 
-    if question.save
-      redirect_to question_path(question), notice: 'Your question was successfully created.'
+  def create
+    @question = current_user.questions.new(question_params)
+
+    if @question.save
+      redirect_to question_path(@question), notice: 'Your question was successfully created.'
     else
       render :new
     end
@@ -40,6 +45,6 @@ class QuestionsController < ApplicationController
   end
 
   def question_params
-    params.require(:question).permit(:title, :body, files: [])
+    params.require(:question).permit(:title, :body, files: [], links_attributes: %i[name url])
   end
 end

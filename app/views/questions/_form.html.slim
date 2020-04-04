@@ -1,7 +1,7 @@
 p
-  = render 'shared/errors', resource: question
+  = render 'shared/errors', resource: @question
 
-= form_with model: question, local: true do |f|
+= form_with model: @question, local: true do |f|
   p
     = f.label :title
     = f.text_field :title
@@ -13,6 +13,17 @@ p
   p
     = f.label :files
     = f.file_field :files, multiple: true, direct_upload: true
+
+  p Links
+  p
+    = f.fields_for :links do |l|
+      p
+        = l.label :name, 'Link name'
+        = l.text_field :name
+
+      p
+        = l.label :url, 'Url'
+        = l.text_field :url
 
   p
     = f.submit 'Ask'
