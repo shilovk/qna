@@ -6,6 +6,40 @@ RSpec.describe QuestionsController, type: :controller do
   let(:user) { create(:user) }
   let(:question) { create(:question, user: user) }
 
+  describe 'GET #index' do
+    let(:questions) { create_list(:question, 2, user: user) }
+    before { get :index }
+
+    it 'populates an array of all questions' do
+      expect(assigns(:questions)).to match_array(questions)
+    end
+
+    it 'renders index view' do
+      expect(response).to render_template :index
+    end
+  end
+
+  describe 'GET #show' do
+    before { get :show, params: { id: question } }
+
+    it 'assings the requested question to @question' do
+      expect(assigns(:question)).to eq question
+    end
+
+    it 'assings new answer for question' do
+      expect(assigns(:answer)).to be_a_new(Answer)
+    end
+
+    it 'assings new link for answer' do
+      expect(assigns(:answer).links.first).to be_a_new(Link)
+    end
+
+    it 'renders show view' do
+      expect(response).to render_template :show
+    end
+  end
+
+
   describe 'GET #new' do
     before { login(user) }
     before { get :new }

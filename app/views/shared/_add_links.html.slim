@@ -1,0 +1,10 @@
+p Links:
+p
+  = record.fields_for :links do |l|
+    p
+      = l.label :name, 'Link name'
+      = l.text_field :name
+
+    p
+      = l.label :url, 'Url'
+      = l.text_field :url
