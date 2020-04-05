@@ -10,7 +10,6 @@ feature 'User can edit his question', "
   given!(:user) { create(:user) }
   given!(:other_user) { create(:user) }
   given!(:question) { create(:question, :with_file, user: user) }
-  given!(:link) { create(:link, linkable: question) }
   given(:gist_url) { 'https://gist.github.com/shilovk/71e74ced60a35be63b74510b1cf13d94' }
 
   scenario 'Unauthenticated user can not edit question' do
@@ -68,9 +67,11 @@ feature 'User can edit his question', "
       expect(page).to_not have_content question.files.first
     end
 
-    scenario 'edits his question with links', js: true do
+    scenario 'edits his question with added links', js: true do
       within '.question' do
         click_on 'Edit question'
+
+        click_on 'Add link'
 
         fill_in 'Link name', with: 'My gist'
         fill_in 'Url', with: gist_url
@@ -82,6 +83,9 @@ feature 'User can edit his question', "
     end
 
     scenario 'deletes link on his question', js: true do
+      create(:link, linkable: question)
+      visit question_path(question)
+
       within '.question' do
         click_on 'Edit question'
 
@@ -95,6 +99,8 @@ feature 'User can edit his question', "
   end
 
   describe 'Authenticated user that not author of question' do
+    given!(:link) { create(:link, linkable: question) }
+
     background do
       sign_in(other_user)
       visit question_path(question)
@@ -112,8 +118,9 @@ feature 'User can edit his question', "
       end
     end
 
-    scenario 'deletes link on another question' do
+    scenario 'tries to delete link on another question' do
       within '.question' do
+        expect(page).to_not have_link 'Edit question'
         expect(page).to_not have_link 'Remove link'
       end
     end

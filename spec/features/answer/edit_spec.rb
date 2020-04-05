@@ -11,7 +11,6 @@ feature 'User can edit answer', "
   given!(:other_user) { create(:user) }
   given!(:question) { create(:question) }
   given!(:answer) { create(:answer, :with_file, question: question, user: user) }
-  given!(:link) { create(:link, linkable: answer) }
   given(:gist_url) { 'https://gist.github.com/shilovk/71e74ced60a35be63b74510b1cf13d94' }
 
   scenario 'Unauthenticated can not edit answer' do
@@ -69,9 +68,11 @@ feature 'User can edit answer', "
       expect(page).to_not have_content answer.files.first
     end
 
-    scenario 'edits his answer with links', js: true do
+    scenario 'edits his answer with added links', js: true do
       within ".answers #answer-#{answer.id}" do
         click_on 'Edit answer'
+
+        click_on 'Add link'
 
         fill_in 'Link name', with: 'My gist'
         fill_in 'Url', with: gist_url
@@ -83,6 +84,10 @@ feature 'User can edit answer', "
     end
 
     scenario 'deletes link on his answer', js: true do
+      create(:link, linkable: answer)
+      visit question_path(question)
+
+
       within ".answers #answer-#{answer.id}" do
         click_on 'Edit answer'
 
@@ -96,6 +101,8 @@ feature 'User can edit answer', "
   end
 
   describe 'Authenticated user that not author of answer' do
+    given!(:link) { create(:link, linkable: answer) }
+
     background do
       sign_in(other_user)
       visit question_path(question)
@@ -113,8 +120,9 @@ feature 'User can edit answer', "
       end
     end
 
-    scenario 'deletes link on another answer' do
+    scenario 'tries to delete link on another answer' do
       within '.answers' do
+        expect(page).to_not have_link 'Edit answer'
         expect(page).to_not have_link 'Remove link'
       end
     end
