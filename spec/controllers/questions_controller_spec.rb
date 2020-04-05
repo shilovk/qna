@@ -39,7 +39,6 @@ RSpec.describe QuestionsController, type: :controller do
     end
   end
 
-
   describe 'GET #new' do
     before { login(user) }
     before { get :new }

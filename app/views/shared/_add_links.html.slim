@@ -1,10 +1,8 @@
 p Links:
-p
-  = record.fields_for :links do |l|
-    p
-      = l.label :name, 'Link name'
-      = l.text_field :name
 
-    p
-      = l.label :url, 'Url'
-      = l.text_field :url
+#links
+  = record.fields_for :links do |link|
+    = render 'shared/link_fields', f: link
+  .links
+    = link_to_add_association 'Add link', record, :links,
+    partial: 'shared/link_fields'
