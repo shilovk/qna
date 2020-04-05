@@ -1,0 +1,11 @@
+h2 My awards
+
+p Awards:
+
+- @awards.each do |award|
+  p
+    = award.question.title
+  p
+    = award.title
+  p
+    = image_tag award.image if award.image.attached?

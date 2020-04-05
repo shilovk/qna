@@ -16,5 +16,14 @@ p
 
   = render 'shared/add_links', record: f
 
+  .award
+    p Award:
+    p
+      = f.fields_for :award do |a|
+        = a.label :title, 'Award title'
+        = a.text_field :title
+        = a.label :image, 'Image'
+        = a.file_field :image
+
   p
     = f.submit 'Ask'

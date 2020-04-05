@@ -16,14 +16,18 @@ RSpec.describe Answer, type: :model do
   end
 
   describe '#set_best' do
-    let(:user) { create(:user) }
-    let(:question) { create(:question, user: user) }
+    let!(:user) { create(:user) }
+    let!(:question) { create(:question, :with_award, user: user) }
     let!(:answer) { create(:answer, question: question, user: user) }
     let!(:other_answer) { create(:answer, :best, question: question, user: user) }
     before { answer.set_best }
 
     it 'should choose answer as the best' do
       expect(answer).to be_best
+    end
+
+    it "should set question's award to user" do
+      expect(user.awards.map(&:id)).to include(question.award.id)
     end
 
     it 'should desable best for old answer' do

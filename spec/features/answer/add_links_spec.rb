@@ -52,7 +52,6 @@ feature 'User can add links to answer', "
       click_on 'Create'
 
       within '.answers' do
-        expect(page).to have_selector :css, 'script', visible: false, minimum: 1
         expect(page).to_not have_link 'My gist', href: gist_url
       end
     end
