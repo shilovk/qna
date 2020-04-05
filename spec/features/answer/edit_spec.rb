@@ -14,7 +14,6 @@ feature 'User can edit answer', "
   given!(:link) { create(:link, linkable: answer) }
   given(:gist_url) { 'https://gist.github.com/shilovk/71e74ced60a35be63b74510b1cf13d94' }
 
-
   scenario 'Unauthenticated can not edit answer' do
     visit question_path(question)
 
