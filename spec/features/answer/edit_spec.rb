@@ -87,7 +87,6 @@ feature 'User can edit answer', "
       create(:link, linkable: answer)
       visit question_path(question)
 
-
       within ".answers #answer-#{answer.id}" do
         click_on 'Edit answer'
 
