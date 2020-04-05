@@ -3,4 +3,4 @@
   ul
     - links.each do |link|
       li
-        = link_to link.name, link.url
+        = parsed_url(link.url, link.name)

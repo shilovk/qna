@@ -11,7 +11,7 @@ feature 'User can edit answer', "
   given!(:other_user) { create(:user) }
   given!(:question) { create(:question) }
   given!(:answer) { create(:answer, :with_file, question: question, user: user) }
-  given(:gist_url) { 'https://gist.github.com/shilovk/71e74ced60a35be63b74510b1cf13d94' }
+  given(:url) { 'http://foo.com' }
 
   scenario 'Unauthenticated can not edit answer' do
     visit question_path(question)
@@ -74,12 +74,12 @@ feature 'User can edit answer', "
 
         click_on 'Add link'
 
-        fill_in 'Link name', with: 'My gist'
-        fill_in 'Url', with: gist_url
+        fill_in 'Link name', with: 'My url'
+        fill_in 'Url', with: url
 
         click_on 'Save answer'
 
-        expect(page).to have_link 'My gist', href: gist_url
+        expect(page).to have_link 'My url', href: url
       end
     end
 

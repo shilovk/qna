@@ -9,6 +9,7 @@ feature 'User can add links to question', "
 " do
   describe 'User adds link when asks a question' do
     given(:user) { create(:user) }
+    given(:url) { 'http://foo.com' }
     given(:gist_url) { 'https://gist.github.com/shilovk/71e74ced60a35be63b74510b1cf13d94' }
 
     background do
@@ -20,25 +21,43 @@ feature 'User can add links to question', "
       fill_in 'Title', with: 'Test question'
       fill_in 'Body', with: 'text text text'
 
-      fill_in 'Link name', with: 'My gist'
-      fill_in 'Url', with: gist_url
+      fill_in 'Link name', with: 'My url'
+      fill_in 'Url', with: url
 
       click_on 'Ask'
 
-      expect(page).to have_link 'My gist', href: gist_url
+      within('.question') do
+        expect(page).to have_link 'My url', href: url
+        expect(page).to_not have_selector :css, 'script', visible: false, minimum: 1
+      end
     end
 
     scenario 'with invalid url' do
       fill_in 'Title', with: 'Test question'
       fill_in 'Body', with: 'text text text'
 
-      fill_in 'Link name', with: 'My gist'
+      fill_in 'Link name', with: 'My url'
       fill_in 'Url', with: 'foo'
 
       click_on 'Ask'
 
       expect(page).to have_content 'is not a valid URL'
-      expect(page).to_not have_link 'My gist', href: 'foo'
+      expect(page).to_not have_link 'My url', href: 'foo'
+    end
+
+    scenario 'with valid gist url' do
+      fill_in 'Title', with: 'Test question'
+      fill_in 'Body', with: 'text text text'
+
+      fill_in 'Link name', with: 'My gist'
+      fill_in 'Url', with: gist_url
+
+      click_on 'Ask'
+
+      within('.question') do
+        expect(page).to have_selector :css, 'script', visible: false, minimum: 1
+        expect(page).to_not have_link 'My gist', href: gist_url
+      end
     end
   end
 end
