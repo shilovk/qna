@@ -5,5 +5,9 @@ errors.innerHTML = '<%= render 'shared/errors', resource: @answer %>';
   var answers = document.querySelector('.answers');
   answers.insertAdjacentHTML('beforeend', '<%= j render @answer %>');
   var answerBody = document.querySelector('.new-answer #answer_body');
+  var answerLinkName = document.querySelector('.new-answer #answer_links_attributes_0_name');
+  var answerUrl = document.querySelector('.new-answer #answer_links_attributes_0_url');
   answerBody.value = '';
+  answerLinkName.value = '';
+  answerUrl.value = '';
 <% end %>
