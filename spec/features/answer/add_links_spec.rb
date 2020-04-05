@@ -7,24 +7,38 @@ feature 'User can add links to answer', "
   As an answer's author
   I'd like to be able to add links
 " do
-  given(:user) { create(:user) }
-  given!(:question) { create(:question) }
-  given(:gist_url) { 'https://gist.github.com/shilovk/71e74ced60a35be63b74510b1cf13d94' }
+  describe 'User adds link when asks an answer' do
+    given(:user) { create(:user) }
+    given!(:question) { create(:question) }
+    given(:gist_url) { 'https://gist.github.com/shilovk/71e74ced60a35be63b74510b1cf13d94' }
 
-  scenario 'User adds link when give an answer', js: true do
-    sign_in(user)
+    background do
+      sign_in(user)
+      visit question_path(question)
+    end
 
-    visit question_path(question)
+    scenario 'with valid url', js: true do
+      fill_in 'Your answer', with: 'My answer'
 
-    fill_in 'Your answer', with: 'My answer'
+      fill_in 'Link name', with: 'My gist'
+      fill_in 'Url', with: gist_url
 
-    fill_in 'Link name', with: 'My gist'
-    fill_in 'Url', with: gist_url
+      click_on 'Create'
 
-    click_on 'Create'
+      within '.answers' do
+        expect(page).to have_link 'My gist', href: gist_url
+      end
+    end
 
-    within '.answers' do
-      expect(page).to have_link 'My gist', href: gist_url
+    scenario 'with invalid url', js: true do
+      fill_in 'Your answer', with: 'My answer'
+
+      fill_in 'Link name', with: 'My gist'
+      fill_in 'Url', with: 'foo'
+
+      click_on 'Create'
+
+      expect(page).to have_content 'is not a valid URL'
     end
   end
 end

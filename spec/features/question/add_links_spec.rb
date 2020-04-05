@@ -7,21 +7,38 @@ feature 'User can add links to question', "
   As an question's author
   I'd like to be able to add links
 " do
-  given(:user) { create(:user) }
-  given(:gist_url) { 'https://gist.github.com/shilovk/71e74ced60a35be63b74510b1cf13d94' }
+  describe 'User adds link when asks a question' do
+    given(:user) { create(:user) }
+    given(:gist_url) { 'https://gist.github.com/shilovk/71e74ced60a35be63b74510b1cf13d94' }
 
-  scenario 'User adds link when asks question' do
-    sign_in(user)
-    visit new_question_path
+    background do
+      sign_in(user)
+      visit new_question_path
+    end
 
-    fill_in 'Title', with: 'Test question'
-    fill_in 'Body', with: 'text text text'
+    scenario 'with valid url' do
+      fill_in 'Title', with: 'Test question'
+      fill_in 'Body', with: 'text text text'
 
-    fill_in 'Link name', with: 'My gist'
-    fill_in 'Url', with: gist_url
+      fill_in 'Link name', with: 'My gist'
+      fill_in 'Url', with: gist_url
 
-    click_on 'Ask'
+      click_on 'Ask'
 
-    expect(page).to have_link 'My gist', href: gist_url
+      expect(page).to have_link 'My gist', href: gist_url
+    end
+
+    scenario 'with invalid url' do
+      fill_in 'Title', with: 'Test question'
+      fill_in 'Body', with: 'text text text'
+
+      fill_in 'Link name', with: 'My gist'
+      fill_in 'Url', with: 'foo'
+
+      click_on 'Ask'
+
+      expect(page).to have_content 'is not a valid URL'
+      expect(page).to_not have_link 'My gist', href: 'foo'
+    end
   end
 end
