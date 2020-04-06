@@ -12,6 +12,8 @@ Rails.application.routes.draw do
   resources :questions do
     resources :answers, shallow: true do
       patch :best, on: :member
+      post :up, on: :member
+      post :down, on: :member
     end
   end
 end

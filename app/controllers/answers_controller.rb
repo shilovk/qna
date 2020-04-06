@@ -3,20 +3,10 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
   before_action :question, only: :create
-  before_action :load_answer, only: %i[update destroy best]
+  before_action :load_answer, only: %i[update destroy best up down]
 
   def create
-    @answer = question.answers.new(answer_params.merge(user_id: current_user.id))
-
-    respond_to do |format|
-      if @answer.save
-        format.json { render json: @answer }
-      else
-        format.json do
-          render json: @answer.errors.full_messages, status: :unprocessable_entity
-        end
-      end
-    end
+    @answer = question.answers.create(answer_params.merge(user_id: current_user.id))
   end
 
   def update
@@ -36,10 +26,23 @@ class AnswersController < ApplicationController
   end
 
   def best
-    return unless current_user&.author?(@answer)
+    @question = @answer.question
+
+    return unless current_user&.author?(@question)
 
     @answer.set_best
-    @question = @answer.question
+  end
+
+  def up
+    @answer.vote_up unless current_user.author?(@answer)
+
+    render json: { id: @answer, score: @answer.score }
+  end
+
+  def down
+    @answer.vote_down unless current_user.author?(@answer)
+
+    render json: { id: @answer, score: @answer.score }
   end
 
   private

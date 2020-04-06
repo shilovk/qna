@@ -5,8 +5,15 @@
     - if answer.best
       b Best answer
 
+    .vote
+      - if current_user && !current_user&.author?(answer)
+        = link_to 'Up', polymorphic_path(answer, action: :up), method: :post, remote: true, data: { type: :json }
+        = link_to 'Down', polymorphic_path(answer, action: :down), method: :post, remote: true, data: { type: :json }
+
+      .score
+        = answer.score
     p
-     = answer.body
+      = answer.body
 
     - if answer.files.attached?
       - answer.files.each do |file|

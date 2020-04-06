@@ -3,7 +3,8 @@
 class Answer < ApplicationRecord
   belongs_to :question
   belongs_to :user
-  has_many :links, dependent: :destroy, as: :linkable
+  has_many :links, as: :linkable, dependent: :destroy
+  has_many :votes, as: :votable, dependent: :destroy
 
   has_many_attached :files
 
@@ -19,5 +20,21 @@ class Answer < ApplicationRecord
       update!(best: true)
       question.award&.update!(user_id: user.id)
     end
+  end
+
+  def score
+    votes.sum(:value)
+  end
+
+  def vote_up
+    return if votes.find_by(value: -1, user_id: user.id)&.delete
+
+    votes.find_or_create_by!(value: 1, user_id: user.id)
+  end
+
+  def vote_down
+    return if votes.find_by(value: 1, user_id: user.id)&.delete
+
+    votes.find_or_create_by!(value: -1, user_id: user.id)
   end
 end

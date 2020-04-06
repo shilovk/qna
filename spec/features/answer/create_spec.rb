@@ -44,7 +44,7 @@ feature 'User can create answer', "
     end
   end
 
-  scenario 'Unauthenticated user creates an answer to the question' do
+  scenario 'Unauthenticated user tries to create an answer to the question' do
     visit question_path(question)
 
     fill_in 'Your answer', with: "Test answer's body"

@@ -7,12 +7,12 @@ feature 'User can add links to answer', "
   As an answer's author
   I'd like to be able to add links
 " do
-  describe 'User adds link when asks an answer' do
-    given(:user) { create(:user) }
-    given!(:question) { create(:question) }
-    given(:url) { 'http://foo.com' }
-    given(:gist_url) { 'https://gist.github.com/shilovk/71e74ced60a35be63b74510b1cf13d94' }
+  given(:user) { create(:user) }
+  given!(:question) { create(:question) }
+  given(:url) { 'http://foo.com' }
+  given(:gist_url) { 'https://gist.github.com/shilovk/71e74ced60a35be63b74510b1cf13d94' }
 
+  describe 'User adds link when asks an answer' do
     background do
       sign_in(user)
       visit question_path(question)
