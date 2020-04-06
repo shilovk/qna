@@ -6,7 +6,19 @@ class AnswersController < ApplicationController
   before_action :load_answer, only: %i[update destroy best]
 
   def create
-    @answer = question.answers.create(answer_params.merge(user_id: current_user.id))
+    @answer = question.answers.new(answer_params.merge(user_id: current_user.id))
+
+    respond_to do |format|
+      if @answer.save
+        format.html { render @answer }
+      else
+        format.html do
+          render partial: 'shared/errors',
+                 locals: { resource: @answer },
+                 status: :unprocessable_entity
+        end
+      end
+    end
   end
 
   def update
