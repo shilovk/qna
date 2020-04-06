@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe AttachmentsController, type: :controller do
   let(:user) { create(:user) }
   let!(:question) { create(:question, :with_file, user: user) }
-  let!(:answer) { create(:answer, :with_file, question: question, user: user) }
+  let!(:answer) { create(:answer, :with_file, user: user) }
 
   describe 'DELETE #destroy' do
     before { login(user) }

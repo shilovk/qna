@@ -17,5 +17,9 @@ FactoryBot.define do
     trait :with_file do
       files { [Rack::Test::UploadedFile.new(Rails.root.join('spec', 'rails_helper.rb'))] }
     end
+
+    trait :with_award do
+      award { create(:award) }
+    end
   end
 end

@@ -2,16 +2,30 @@
 
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: %i[index show]
-  before_action :load_question, only: %i[show edit update]
+  before_action :load_question, only: %i[show edit update destroy]
 
-  expose :questions, -> { Question.all }
-  expose :question
+  def index
+    @questions = Question.all
+  end
+
+  def show
+    @answer = Answer.new
+    @answer.links.new
+  end
+
+  def new
+    @question = Question.new
+    @question.links.new # .build
+    @question.build_award
+  end
+
+  def edit; end
 
   def create
-    question.user = current_user
+    @question = current_user.questions.new(question_params)
 
-    if question.save
-      redirect_to question_path(question), notice: 'Your question was successfully created.'
+    if @question.save
+      redirect_to question_path(@question), notice: 'Your question was successfully created.'
     else
       render :new
     end
@@ -25,11 +39,11 @@ class QuestionsController < ApplicationController
   end
 
   def destroy
-    if current_user&.author?(question)
-      question.destroy
+    if current_user&.author?(@question)
+      @question.destroy
       redirect_to questions_path, notice: 'Your question was succesfully deleted.'
     else
-      redirect_to question, alert: 'You are not the author of this question.'
+      redirect_to @question, alert: 'You are not the author of this question.'
     end
   end
 
@@ -39,7 +53,9 @@ class QuestionsController < ApplicationController
     @question = Question.with_attached_files.find(params[:id])
   end
 
+  helper_method :question
+
   def question_params
-    params.require(:question).permit(:title, :body, files: [])
+    params.require(:question).permit(:title, :body, files: [], links_attributes: %i[id name url _destroy], award_attributes: %i[title image])
   end
 end

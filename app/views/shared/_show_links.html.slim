@@ -1,0 +1,6 @@
+.links
+  p Links:
+  ul
+    - links.each do |link|
+      li
+        = parsed_url(link.url, link.name)

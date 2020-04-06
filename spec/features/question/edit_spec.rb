@@ -10,6 +10,7 @@ feature 'User can edit his question', "
   given!(:user) { create(:user) }
   given!(:other_user) { create(:user) }
   given!(:question) { create(:question, :with_file, user: user) }
+  given(:url) { 'http://foo.com' }
 
   scenario 'Unauthenticated user can not edit question' do
     visit question_path(question)
@@ -65,9 +66,41 @@ feature 'User can edit his question', "
       expect(page).to_not have_link 'rails_helper.rb'
       expect(page).to_not have_content question.files.first
     end
+
+    scenario 'edits his question with added links', js: true do
+      within '.question' do
+        click_on 'Edit question'
+
+        click_on 'Add link'
+
+        fill_in 'Link name', with: 'My url'
+        fill_in 'Url', with: url
+
+        click_on 'Save question'
+
+        expect(page).to have_link 'My url', href: url
+      end
+    end
+
+    scenario 'deletes link on his question', js: true do
+      create(:link, linkable: question)
+      visit question_path(question)
+
+      within '.question' do
+        click_on 'Edit question'
+
+        within '.nested-fields' do
+          click_on 'Remove link'
+        end
+
+        expect(page).to_not have_content question.links.first
+      end
+    end
   end
 
   describe 'Authenticated user that not author of question' do
+    given!(:link) { create(:link, linkable: question) }
+
     background do
       sign_in(other_user)
       visit question_path(question)
@@ -82,6 +115,13 @@ feature 'User can edit his question', "
     scenario 'tries to delete file on question' do
       within '.question' do
         expect(page).to_not have_link 'Remove file'
+      end
+    end
+
+    scenario 'tries to delete link on another question' do
+      within '.question' do
+        expect(page).to_not have_link 'Edit question'
+        expect(page).to_not have_link 'Remove link'
       end
     end
   end
