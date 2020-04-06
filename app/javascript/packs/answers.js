@@ -8,13 +8,15 @@ $(document).on('turbolinks:load', function(){
 
   $('form.new-answer')
     .on('ajax:success', function(e) {
-      var xhr = e.detail[2];
+      var answer = e.detail[0];
 
-      $('.answers').append(xhr.responseText);
-  })
+      $('.answers').append('<p>' + answer.body + '</p>');
+    })
     .on('ajax:error', function(e) {
-      var xhr = e.detail[2];
+      var errors = e.detail[0];
 
-      $('.answer-errors:last').html(xhr.responseText);
-  })
+      $.each(errors, function(index, value) {
+        $('.answer-errors:last').append('<p>' + value + '</p>');
+      })
+    })
 });
