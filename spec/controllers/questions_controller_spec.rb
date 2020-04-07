@@ -165,7 +165,9 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'POST #up' do
-    context 'user tries to create a new up vote to' do
+    before { login(user) }
+
+    context 'user tries to create a new up vote to a question' do
       it 'creates a new up vote to not own question' do
         expect { post :up, params: { id: other_question.id }, format: :json }.to change(other_question.votes, :count).by(1)
       end
@@ -177,6 +179,8 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'POST #down' do
+    before { login(user) }
+
     context 'user tries to create a new down vote to a question' do
       it 'creates a new down vote to not own question' do
         expect { post :down, params: { id: other_question }, format: :json }.to change(other_question.votes, :count).by(1)
