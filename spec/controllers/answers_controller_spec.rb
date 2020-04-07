@@ -3,9 +3,11 @@
 require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
-  let(:user) { create(:user) }
-  let(:question) { create(:question, user: user) }
-  let(:answer) { create(:answer, question: question, user: user) }
+  let!(:user) { create(:user) }
+  let!(:other_user) { create(:user) }
+  let!(:question) { create(:question, :with_award, user: user) }
+  let!(:answer) { create(:answer, question: question, user: user) }
+  let!(:other_answer) { create(:answer, question: question, user: other_user) }
   before { login(user) }
 
   describe 'POST #create' do
@@ -38,8 +40,6 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    let!(:answer) { create(:answer, question: question, user: user) }
-
     context 'User tries to delete own answer' do
       it 'can to delete the answer' do
         expect { delete :destroy, params: { id: answer }, format: :js }.to change(Answer, :count).by(-1)
@@ -106,23 +106,49 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'PATCH #best' do
-    context 'user set a best answer to own question' do
+    context 'user sets a best answer to own question' do
       it 'chooses the answer as the best' do
         patch :best, params: { id: answer }, format: :js
         answer.reload
         expect(answer).to be_best
       end
+
+      it "assigns award to user's answer" do
+        expect { patch :best, params: { id: answer }, format: :js }.to change(answer.user.awards, :count).by(1)
+      end
     end
 
     context 'user tries to set a best answer to not own question' do
-      let(:other_answer) { create(:answer, :best, question: question) }
+      before { sign_in(create(:user)) }
 
       it 'does not choose the answer as the best' do
-        sign_in(create(:user))
-
         patch :best, params: { id: answer }, format: :js
         answer.reload
         expect(answer).not_to be_best
+      end
+    end
+  end
+
+  describe 'POST #up' do
+    context 'user tries to create a new up vote to an answer of the question' do
+      it 'creates a new up vote to not own answer' do
+        expect { post :up, params: { id: other_answer }, format: :json }.to change(other_answer.votes, :count).by(1)
+      end
+
+      it 'does not create a new up vote to own answer' do
+        expect { post :up, params: { id: answer }, format: :json }.to_not change(answer.votes, :count)
+      end
+    end
+  end
+
+  describe 'POST #down' do
+    context 'user tries to create a new down vote to an answer of the question' do
+      it 'creates a new down vote to not own answer' do
+        expect { post :down, params: { id: other_answer }, format: :json }.to change(other_answer.votes, :count).by(1)
+      end
+
+      it 'does not create a new down vote to own answer' do
+        expect { post :down, params: { id: answer }, format: :json }.to_not change(answer.votes, :count)
       end
     end
   end

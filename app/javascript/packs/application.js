@@ -22,3 +22,4 @@ import "cocoon-js"
 require("./direct_uploads")
 require("./answers")
 require("./questions")
+require("./utilities/vote")

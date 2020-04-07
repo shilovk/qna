@@ -4,7 +4,9 @@ require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
   let(:user) { create(:user) }
+  let(:other_user) { create(:user) }
   let(:question) { create(:question, user: user) }
+  let(:other_question) { create(:question, user: other_user) }
 
   describe 'GET #index' do
     let(:questions) { create_list(:question, 2, user: user) }
@@ -158,6 +160,34 @@ RSpec.describe QuestionsController, type: :controller do
       it 'redirects to show view' do
         delete :destroy, params: { id: question }
         expect(response).to redirect_to question_path(question)
+      end
+    end
+  end
+
+  describe 'POST #up' do
+    before { login(user) }
+
+    context 'user tries to create a new up vote to a question' do
+      it 'creates a new up vote to not own question' do
+        expect { post :up, params: { id: other_question.id }, format: :json }.to change(other_question.votes, :count).by(1)
+      end
+
+      it 'does not create a new up vote to own question' do
+        expect { post :up, params: { id: question }, format: :json }.to_not change(question.votes, :count)
+      end
+    end
+  end
+
+  describe 'POST #down' do
+    before { login(user) }
+
+    context 'user tries to create a new down vote to a question' do
+      it 'creates a new down vote to not own question' do
+        expect { post :down, params: { id: other_question }, format: :json }.to change(other_question.votes, :count).by(1)
+      end
+
+      it 'does not create a new down vote to own question' do
+        expect { post :down, params: { id: question }, format: :json }.to_not change(question.votes, :count)
       end
     end
   end

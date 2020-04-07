@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 class AnswersController < ApplicationController
+  include Voted
+
   before_action :authenticate_user!
   before_action :question, only: :create
-  before_action :load_answer, only: %i[update destroy best]
+  before_action :load_answer, only: %i[update destroy best up down]
 
   def create
     @answer = question.answers.create(answer_params.merge(user_id: current_user.id))
@@ -26,10 +28,11 @@ class AnswersController < ApplicationController
   end
 
   def best
-    return unless current_user&.author?(@answer)
+    @question = @answer.question
+
+    return unless current_user&.author?(@question)
 
     @answer.set_best
-    @question = @answer.question
   end
 
   private
