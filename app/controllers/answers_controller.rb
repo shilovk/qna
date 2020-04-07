@@ -36,13 +36,13 @@ class AnswersController < ApplicationController
   def up
     @answer.vote_up unless current_user.author?(@answer)
 
-    render json: { id: @answer, score: @answer.score }
+    render json: { score: @answer.score }
   end
 
   def down
     @answer.vote_down unless current_user.author?(@answer)
 
-    render json: { id: @answer, score: @answer.score }
+    render json: { score: @answer.score }
   end
 
   private

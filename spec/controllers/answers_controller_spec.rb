@@ -122,7 +122,6 @@ RSpec.describe AnswersController, type: :controller do
       before { sign_in(create(:user)) }
 
       it 'does not choose the answer as the best' do
-
         patch :best, params: { id: answer }, format: :js
         answer.reload
         expect(answer).not_to be_best
@@ -132,7 +131,6 @@ RSpec.describe AnswersController, type: :controller do
 
   describe 'POST #up' do
     context 'user tries to create new up vote to answer of the question' do
-
       it 'creates a new up vote to not own answer' do
         expect { post :up, params: { id: other_answer }, format: :json }.to change(other_answer.votes, :count).by(1)
       end
@@ -145,7 +143,6 @@ RSpec.describe AnswersController, type: :controller do
 
   describe 'POST #down' do
     context 'user tries to creates new down vote to answer of the question' do
-
       it 'creates a new down vote to not own answer' do
         expect { post :down, params: { id: other_answer }, format: :json }.to change(other_answer.votes, :count).by(1)
       end

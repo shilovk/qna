@@ -1,0 +1,15 @@
+.vote
+
+  - if current_user && !current_user&.author?(resource)
+
+    = link_to 'Up', polymorphic_path(resource, action: :up), method: :post, remote: true, data: { type: :json }
+
+    .score
+      = resource.score
+
+    = link_to 'Down', polymorphic_path(resource, action: :down), method: :post, remote: true, data: { type: :json }
+
+  - else
+
+    .score
+      = resource.score
