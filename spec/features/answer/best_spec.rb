@@ -19,7 +19,7 @@ feature 'User can set best answer', "
     end
 
     scenario 'may set a best answer for own question', js: true do
-      within"#answer-#{answer.id}" do
+      within "#answer-#{answer.id}" do
         click_on 'Set the best'
 
         expect(page).to have_content 'Best answer'
