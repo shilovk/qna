@@ -1,2 +1,2 @@
 var answers = document.querySelector('.answers');
-answers.innerHTML = '<%= j render @question.answers.order(best: :desc) %>';
+answers.innerHTML = '<%= j render @question.answers.order(best: :desc, created_at: :asc) %>';
