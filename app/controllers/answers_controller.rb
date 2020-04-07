@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class AnswersController < ApplicationController
+  include Voted
+
   before_action :authenticate_user!
   before_action :question, only: :create
   before_action :load_answer, only: %i[update destroy best up down]
@@ -31,18 +33,6 @@ class AnswersController < ApplicationController
     return unless current_user&.author?(@question)
 
     @answer.set_best
-  end
-
-  def up
-    @answer.vote_up unless current_user.author?(@answer)
-
-    render json: { score: @answer.score }
-  end
-
-  def down
-    @answer.vote_down unless current_user.author?(@answer)
-
-    render json: { score: @answer.score }
   end
 
   private

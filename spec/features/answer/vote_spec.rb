@@ -5,8 +5,7 @@ require 'rails_helper'
 feature 'User can vote for answer to the question', "
   In order to vote for not own answer to the question
   As an authenticated user
-  I'd like to be able to like or dislike for answer
-" do
+  I'd like to be able to up or down vote for the answer" do
   given!(:user) { create(:user) }
   given!(:other_user) { create(:user) }
   given!(:question) { create(:question, user: user) }

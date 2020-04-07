@@ -2,8 +2,12 @@
   div id="answer-#{answer.id}"
     .answer-errors
 
-    - if answer.best
-      b Best answer
+    p
+      - if answer.best
+        b Best answer
+
+      - if current_user&.author?(answer.question)
+        = link_to 'Set the best', best_answer_path(answer), id: "best-answer-#{answer.id}", remote: true, method: :patch
 
     = render 'shared/vote', resource: answer
 
@@ -20,10 +24,6 @@
     = render 'shared/show_links', links: answer.links
 
     - if current_user&.author?(answer)
-      - unless answer.best
-        p
-          = link_to 'Set the best', best_answer_path(answer), id: "best-answer-#{answer.id}", remote: true, method: :patch
-
       p
         = link_to 'Edit answer', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
 

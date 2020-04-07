@@ -1,5 +1,8 @@
 .question
   .question-errors
+
+  = render 'shared/vote', resource: @question
+
   h2
     = @question.title
   p

@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 class QuestionsController < ApplicationController
+  include Voted
+
   before_action :authenticate_user!, except: %i[index show]
-  before_action :load_question, only: %i[show edit update destroy]
+  before_action :load_question, only: %i[show edit update destroy up down]
 
   def index
     @questions = Question.all
@@ -15,7 +17,7 @@ class QuestionsController < ApplicationController
 
   def new
     @question = Question.new
-    @question.links.new # .build
+    @question.links.new
     @question.build_award
   end
 

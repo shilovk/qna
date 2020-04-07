@@ -130,24 +130,24 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'POST #up' do
-    context 'user tries to create new up vote to answer of the question' do
+    context 'user tries to create a new up vote to an answer of the question' do
       it 'creates a new up vote to not own answer' do
         expect { post :up, params: { id: other_answer }, format: :json }.to change(other_answer.votes, :count).by(1)
       end
 
-      it 'creates a new up vote to not own answer' do
+      it 'does not create a new up vote to own answer' do
         expect { post :up, params: { id: answer }, format: :json }.to_not change(answer.votes, :count)
       end
     end
   end
 
   describe 'POST #down' do
-    context 'user tries to creates new down vote to answer of the question' do
+    context 'user tries to create a new down vote to an answer of the question' do
       it 'creates a new down vote to not own answer' do
         expect { post :down, params: { id: other_answer }, format: :json }.to change(other_answer.votes, :count).by(1)
       end
 
-      it 'creates a new down vote to not own answer' do
+      it 'does not create a new down vote to own answer' do
         expect { post :down, params: { id: answer }, format: :json }.to_not change(answer.votes, :count)
       end
     end
