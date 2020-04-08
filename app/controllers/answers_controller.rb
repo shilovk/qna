@@ -6,10 +6,11 @@ class AnswersController < ApplicationController
   before_action :authenticate_user!
   before_action :question, only: :create
   before_action :load_answer, only: %i[update destroy best up down]
-  after_action :publish_answer, only: :create
+  after_action :broadcast_answer, only: :create
 
   def create
-    @answer = question.answers.create(answer_params.merge(user_id: current_user.id))
+    @answer = @question.answers.create(answer_params.merge(user_id: current_user.id))
+    gon.answer_id = @answer.id
   end
 
   def update
@@ -40,27 +41,23 @@ class AnswersController < ApplicationController
 
   def question
     @question = Question.find(params[:question_id])
+    gon.question_id = @question.id
   end
 
   helper_method :question
 
   def load_answer
     @answer = Answer.with_attached_files.find(params[:id])
+    gon.answer_id = @answer.id
   end
 
   def answer_params
     params.require(:answer).permit(:body, files: [], links_attributes: %i[id name url _destroy])
   end
 
-  def publish_answer
+  def broadcast_answer
     return if @answer.errors.any?
 
-    ActionCable.server.broadcast(
-      "question_#{@question.id}_answers",
-      ApplicationController.render(
-        partial: 'answers/answer_small',
-        locals: { answer: @answer }
-      )
-    )
+    AnswersChannel.broadcast_to(@answer.question, @answer)
   end
 end

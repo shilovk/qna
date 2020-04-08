@@ -1,5 +1,13 @@
+# frozen_string_literal: true
+
 class AnswersChannel < ApplicationCable::Channel
-  def follow(data)
-    stream_from "question_#{data['question_id']}_answers"
+  def subscribed
+    stream_for question
+  end
+
+  private
+  
+  def question
+    Question.find(params[:question_id])
   end
 end
