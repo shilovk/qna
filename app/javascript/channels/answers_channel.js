@@ -1,4 +1,5 @@
 import consumer from "./consumer"
+import answerHtml from "../templates/answer"
 
 $(document).on('turbolinks:load', function(){
   var answersList = $('.answers')
@@ -6,10 +7,13 @@ $(document).on('turbolinks:load', function(){
 
   if (gon.question_id) {
     sub_answersChannel = consumer.subscriptions.create({
-      channel: 'AnswersChannel', question_id: gon.question_id
+      channel: 'AnswersChannel',
+      question_id: gon.question_id,
     }, {
-      received(data) {
-        answersList.append(data)
+      received(answer) {
+        if (gon.user_id !== answer.user_id) {
+          answersList.append(answerHtml(answer))
+        }
       }
     })
   }

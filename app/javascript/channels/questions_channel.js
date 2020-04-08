@@ -6,8 +6,8 @@ $(document).on('turbolinks:load', function(){
 
   if (questionsList.length) {
     sub_questionsChannel = consumer.subscriptions.create('QuestionsChannel', {
-      received(data) {
-        questionsList.append(data)
+      received(questionHtml) {
+        questionsList.append(questionHtml)
       }
     })
   }

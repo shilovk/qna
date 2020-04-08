@@ -6,8 +6,9 @@ class AnswersChannel < ApplicationCable::Channel
   end
 
   private
-  
+
   def question
     Question.find(params[:question_id])
   end
+
 end

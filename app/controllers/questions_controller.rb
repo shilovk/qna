@@ -66,12 +66,13 @@ class QuestionsController < ApplicationController
   def broadcast_question
     return if @question.errors.any?
 
-    ActionCable.server.broadcast(
-      'questions_channel',
-      ApplicationController.render(
-        partial: 'questions/question',
-        locals: { question: @question }
-      )
+    ActionCable.server.broadcast('questions_channel', questionHtml)
+  end
+
+  def questionHtml
+    ApplicationController.render(
+      partial: 'questions/question',
+      locals: { question: @question }
     )
   end
 end

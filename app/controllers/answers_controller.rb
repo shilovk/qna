@@ -3,14 +3,15 @@
 class AnswersController < ApplicationController
   include Voted
 
-  before_action :authenticate_user!
+  before_action :authenticate_user!, except: :show
   before_action :question, only: :create
-  before_action :load_answer, only: %i[update destroy best up down]
+  before_action :load_answer, only: %i[show update destroy best up down]
   after_action :broadcast_answer, only: :create
+
+  def show; end
 
   def create
     @answer = @question.answers.create(answer_params.merge(user_id: current_user.id))
-    gon.answer_id = @answer.id
   end
 
   def update

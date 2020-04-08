@@ -17,7 +17,7 @@ Rails.application.routes.draw do
   resources :links, only: :destroy
 
   resources :questions, concerns: :votable do
-    resources :answers, shallow: true, concerns: :votable, except: %i[index show new] do
+    resources :answers, shallow: true, concerns: :votable, except: %i[index new] do
       patch :best, on: :member
     end
   end
