@@ -47,6 +47,6 @@ class CommentsController < ApplicationController
     question = @resource.is_a?(Question) ? @resource : @resource.question
     gon.question_id = question
 
-    CommentsChannel.broadcast_to(question, { comment: @comment, action: params[:action] } )
+    CommentsChannel.broadcast_to(question, { comment: @comment, action: params[:action] })
   end
 end
