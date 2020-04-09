@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe CommentsController, type: :controller do
@@ -65,7 +67,7 @@ RSpec.describe CommentsController, type: :controller do
 
     context 'User tries to update his comment with invalid attributes' do
       let(:old_comment) { comment }
-      before { patch :update, params: { id: comment, comment: { body: '' } }, format: :js}
+      before { patch :update, params: { id: comment, comment: { body: '' } }, format: :js }
 
       it 'does not changes comment attributes' do
         comment.reload

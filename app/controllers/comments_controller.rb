@@ -4,7 +4,8 @@ class CommentsController < ApplicationController
   before_action :authenticate_user!
   before_action :find_resource, only: :create
   before_action :comment, only: %i[update destroy]
-  after_action :broadcast_comment, only: :create
+  before_action :load_resource, only: %i[update destroy]
+  after_action :broadcast_comment
 
   def create
     @comment = @resource.comments.create(comment_params.merge(user_id: current_user.id))
@@ -28,6 +29,10 @@ class CommentsController < ApplicationController
     @resource = params[:question_id] ? Question.find(params[:question_id]) : Answer.find(params[:answer_id])
   end
 
+  def load_resource
+    @resource = @comment.commentable
+  end
+
   def comment
     @comment = Comment.find(params[:id])
   end
@@ -39,9 +44,9 @@ class CommentsController < ApplicationController
   def broadcast_comment
     return if @comment.errors.any?
 
-     question = @resource.is_a?(Question) ? @resource : @resource.question
-     gon.question_id = question.id
+    question = @resource.is_a?(Question) ? @resource : @resource.question
+    gon.question_id = question
 
-     CommentsChannel.broadcast_to(question, @comment)
+    CommentsChannel.broadcast_to(question, { comment: @comment, action: params[:action] } )
   end
 end
