@@ -33,9 +33,9 @@ gem 'aws-sdk-s3', require: false
 gem 'cocoon'
 # gem 'decent_exposure', '3.0.0'
 gem 'devise'
+gem 'gon'
 gem 'jquery-rails'
 gem 'slim-rails'
-gem 'gon'
 # gem 'skim'
 
 group :development, :test do
