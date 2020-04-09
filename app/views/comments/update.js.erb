@@ -1,6 +1,6 @@
 var comment = $('.comment-<%= @comment.id%>')
 
-comment.find('.comment-errors').html = '<%= render 'shared/errors', resource: @comment %>'
+comment.find('.comment-errors').html('<%= render 'shared/errors', resource: @comment %>')
 
 <% if @comment.persisted? %>
   comment.html('<%= j render @comment %>')

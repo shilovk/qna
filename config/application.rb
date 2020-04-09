@@ -27,6 +27,7 @@ module Qna
                        request_specs: false
     end
 
-    config.action_cable.disable_request_forgery_protection = true
+    config.action_cable.disable_request_forgery_protection = false
+    config.action_cable.mount_path = '/cable'
   end
 end

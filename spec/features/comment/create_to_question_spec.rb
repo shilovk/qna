@@ -2,10 +2,10 @@
 
 require 'rails_helper'
 
-feature 'User can create comment to question', "
+feature 'User can create comment to the question', "
   In order to get answer from a community
   As an authenticated user
-  I'd like to be able to create a comment for the question
+  I'd like to be able to create a comment to the question
 " do
   given(:user) { create(:user) }
   given!(:question) { create(:question, user: user) }
@@ -16,26 +16,37 @@ feature 'User can create comment to question', "
       visit question_path(question)
     end
 
-    scenario 'creates comment for the question with valid attributes', js: true do
-      click_on class: 'add-comment-link'
-      within '.question .comments form.comment-form' do
-        fill_in id: 'comment_body', with: 'New comment'
-        click_button ''
+    scenario 'creates comment to the question with valid attributes', js: true do
+
+      within '.question .comments' do
+        click_on class: 'add-comment-link'
+
+        within '.comment-form' do
+          fill_in id: 'comment_body', with: 'New comment'
+          click_button ''
+        end
+
         expect(page).to have_content 'New comment'
       end
     end
 
-    scenario 'tries to create comment for the question with invalid attributes', js: true do
-      click_on class: 'add-comment-link'
-      within '.question .comments form.comment-form' do
-        fill_in id: 'comment_body', with: ''
-        click_button ''
+    scenario 'tries to create comment to the question with invalid attributes', js: true do
+
+      within '.question .comments' do
+        click_on class: 'add-comment-link'
+
+        within '.comment-form' do
+          fill_in id: 'comment_body', with: ''
+          click_button ''
+        end
+
         expect(page).to have_content 'Body can\'t be blank'
       end
+
     end
   end
 
-  scenario 'Non-authenticated user tries to create comment for the question' do
+  scenario 'Non-authenticated user tries to create comment to the question' do
     visit question_path(question)
 
     within '.question .comments' do
@@ -43,7 +54,7 @@ feature 'User can create comment to question', "
     end
   end
 
-  context 'Multiple sessions' do
+  context 'Multiple sessions to the question\'s' do
     scenario 'comment appears on another user\'s page', js: true do
       Capybara.using_session('user') do
         sign_in(user)
@@ -55,10 +66,14 @@ feature 'User can create comment to question', "
       end
 
       Capybara.using_session('user') do
-        click_on class: 'add-comment-link'
-        within '.question .comments form.comment-form' do
-          fill_in id: 'comment_body', with: 'New comment'
-          click_button ''
+        within '.question .comments' do
+          click_on class: 'add-comment-link'
+
+          within '.comment-form' do
+            fill_in id: 'comment_body', with: 'New comment'
+            click_button ''
+          end
+
           expect(page).to have_content 'New comment'
         end
       end
