@@ -18,7 +18,6 @@ feature 'User can create comment to the answer', "
     end
 
     scenario 'creates comment to the answer with valid attributes', js: true do
-
       within "#answer-#{answer.id} .comments" do
         click_on class: 'add-comment-link'
 
@@ -32,7 +31,6 @@ feature 'User can create comment to the answer', "
     end
 
     scenario 'tries to create comment to the answer with invalid attributes', js: true do
-
       within "#answer-#{answer.id} .comments" do
         click_on class: 'add-comment-link'
 
@@ -43,7 +41,6 @@ feature 'User can create comment to the answer', "
 
         expect(page).to have_content 'Body can\'t be blank'
       end
-
     end
   end
 
