@@ -1,4 +1,4 @@
-.question
+.question id="question-#{@question.id}"
   .question-errors
 
   = render 'shared/vote', resource: @question
@@ -33,6 +33,8 @@
 
     p
       = link_to 'Delete', question_path(@question), method: :delete, data: { confirm: 'Are you sure?' }
+
+  = render 'comments/comments', resource: @question
 
 - if @hide_answers.nil?
   .answers

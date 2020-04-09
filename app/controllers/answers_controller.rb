@@ -49,7 +49,6 @@ class AnswersController < ApplicationController
 
   def load_answer
     @answer = Answer.with_attached_files.find(params[:id])
-    gon.answer_id = @answer.id
   end
 
   def answer_params

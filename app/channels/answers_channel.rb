@@ -10,5 +10,4 @@ class AnswersChannel < ApplicationCable::Channel
   def question
     Question.find(params[:question_id])
   end
-
 end

@@ -1,13 +1,6 @@
-var errors = document.querySelector('.answer-errors');
-errors.innerHTML = '<%= render 'shared/errors', resource: @answer %>';
+$('.answer-errors').html = '<%= render 'shared/errors', resource: @answer %>'
 
 <% if @answer.persisted? %>
-  var answers = document.querySelector('.answers');
-  answers.insertAdjacentHTML('beforeend', '<%= j render @answer %>');
-  var answerBody = document.querySelector('.new-answer #answer_body');
-  var answerLinkName = document.querySelector('.new-answer #answer_links_attributes_0_name');
-  var answerUrl = document.querySelector('.new-answer #answer_links_attributes_0_url');
-  answerBody.value = '';
-  answerLinkName.value = '';
-  answerUrl.value = '';
+  $('.answers').append('<%= j render @answer %>')
+  $('.new-answer').closest('form').find('input[type=text], textarea').val('');
 <% end %>

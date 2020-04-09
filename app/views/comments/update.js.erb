@@ -1,0 +1,11 @@
+var comment = $('.comment-<%= @comment.id%>')
+
+comment.find('.comment-errors').html = '<%= render 'shared/errors', resource: @comment %>'
+
+<% if @comment.persisted? %>
+  comment.html('<%= j render @comment %>')
+  comment.find('form.comment-form').hide()
+  comment.find('.cancel-comment-link').hide()
+  comment.find('.edit-comment-link').show()
+  comment.find('.delete-comment-link').show()
+<% end %>

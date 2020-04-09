@@ -1,0 +1,13 @@
+- if comment.persisted?
+  div class="comment-#{comment.id}"
+    .comment-errors
+
+    p.view
+      = comment.body
+
+    - if current_user&.author?(comment)
+
+      = render 'comments/form', comment: comment
+
+      => link_to 'Edit', '', class: 'edit-comment-link'
+      = link_to 'Delete', comment_path(comment), method: :delete, remote: true, data: { confirm: 'Are you sure?' }, class: 'delete-comment-link'

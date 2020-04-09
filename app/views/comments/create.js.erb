@@ -1,0 +1,10 @@
+var comments = $('#<%= @comment.commentable_type.underscore %>-<%= @comment.commentable_id%> .comments')
+
+comments.find('.comment-errors').html = '<%= render 'shared/errors', resource: @comment %>'
+
+<% if @comment.persisted? %>
+  comments.find('.list').append('<%= j render @comment %>')
+  comments.find('.list').siblings('form.comment-form').hide()
+  comments.find('.list').find('input[type=text]').val('')
+  comments.find('.add-comment-link').show()
+<% end %>
