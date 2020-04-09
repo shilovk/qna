@@ -3,8 +3,11 @@ var comments = $('#<%= @comment.commentable_type.underscore %>-<%= @comment.comm
 comments.find('.comment-errors').html = '<%= render 'shared/errors', resource: @comment %>'
 
 <% if @comment.persisted? %>
-  comments.find('.list').append('<%= j render @comment %>')
-  comments.find('.list').siblings('form.comment-form').hide()
-  comments.find('.list').find('input[type=text]').val('')
-  comments.find('.add-comment-link').show()
+  var commentsList = comments.find('.list')
+
+  commentsList.append('<%= j render @comment %>')
+  commentsList.siblings('form.comment-form').hide()
+  commentsList.siblings('form').find('input[type=text]').val('')
+  commentsList.siblings('.cancel-comment-link').hide()
+  commentsList.siblings('.add-comment-link').show()
 <% end %>

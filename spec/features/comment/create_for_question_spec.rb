@@ -20,7 +20,6 @@ feature 'User can create comment to question', "
       click_on class: 'add-comment-link'
       within '.question .comments form.comment-form' do
         fill_in id: 'comment_body', with: 'New comment'
-        save_and_open_page
         click_button ''
         expect(page).to have_content 'New comment'
       end

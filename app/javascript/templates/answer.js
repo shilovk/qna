@@ -1,12 +1,14 @@
-export default function answerHtml(answer) {
+export default function answerHtml(resource) {
   return `
-    <div id="answer-${answer.id}">
-      ${answer.body}
+    <div id="answer-${resource.id}">
+      ${resource.body}
       <p class="actions">
-        <a href="/answers/${answer.id}" data-remote="true">Show</a>
+        <a href="/answers/${resource.id}" data-remote="true">Show</a>
       </p>
-      <p>Comments</p>
-      <div class="comments"></div>
+      <div class="comments">
+        <p>Comments</p>
+        <div class="list"></div>
+      </div>
     </div>
   `
 }
