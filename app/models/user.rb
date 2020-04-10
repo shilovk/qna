@@ -11,9 +11,7 @@ class User < ApplicationRecord
   has_many :awards, dependent: :destroy
   has_many :votes
 
-  def self.find_for_oauth(data)
-
-  end
+  def self.find_for_oauth(data); end
 
   def author?(record)
     id == record&.user_id

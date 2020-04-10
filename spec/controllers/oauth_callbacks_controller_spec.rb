@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe OauthCallbacksController, type: :controller do
@@ -11,7 +13,7 @@ RSpec.describe OauthCallbacksController, type: :controller do
     it 'finds user from oauth data' do
       allow(request.env).to receive(:[]).and_call_original
       allow(request.env).to receive(:[]).with('omniauth.auth').and_return(oauth_data)
-      expect(User).to receive(:find_for_oauth).with (oauth_data)
+      expect(User).to receive(:find_for_oauth).with oauth_data
       get :github
     end
 
