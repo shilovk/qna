@@ -1,0 +1,9 @@
+.comment-errors
+
+- comment = comment || [resource, resource.comments.new]
+
+= form_with model: comment, class: 'comment-form hidden' do |f|
+  = f.text_field :body
+  = f.submit
+
+= link_to 'Cancel', '', class: 'cancel-comment-link hidden'

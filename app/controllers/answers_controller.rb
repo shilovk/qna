@@ -3,12 +3,15 @@
 class AnswersController < ApplicationController
   include Voted
 
-  before_action :authenticate_user!
+  before_action :authenticate_user!, except: :show
   before_action :question, only: :create
-  before_action :load_answer, only: %i[update destroy best up down]
+  before_action :load_answer, only: %i[show update destroy best up down]
+  after_action :broadcast_answer, only: :create
+
+  def show; end
 
   def create
-    @answer = question.answers.create(answer_params.merge(user_id: current_user.id))
+    @answer = @question.answers.create(answer_params.merge(user_id: current_user.id))
   end
 
   def update
@@ -39,6 +42,7 @@ class AnswersController < ApplicationController
 
   def question
     @question = Question.find(params[:question_id])
+    gon.question_id = @question.id
   end
 
   helper_method :question
@@ -49,5 +53,11 @@ class AnswersController < ApplicationController
 
   def answer_params
     params.require(:answer).permit(:body, files: [], links_attributes: %i[id name url _destroy])
+  end
+
+  def broadcast_answer
+    return if @answer.errors.any?
+
+    AnswersChannel.broadcast_to(@answer.question, @answer)
   end
 end

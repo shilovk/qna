@@ -1,0 +1,6 @@
+<% if @answer.persisted? %>
+  var answer = document.querySelector('.answers > #answer-<%= @answer.id %>');
+  answer.remove();
+  var answers = document.querySelector('.answers');
+  answers.insertAdjacentHTML('beforeend', '<%= j render @answer %>');
+<% end %>

@@ -1,4 +1,4 @@
-.question
+.question id="question-#{@question.id}"
   .question-errors
 
   = render 'shared/vote', resource: @question
@@ -34,9 +34,11 @@
     p
       = link_to 'Delete', question_path(@question), method: :delete, data: { confirm: 'Are you sure?' }
 
+  = render 'comments/comments', resource: @question
+
 - if @hide_answers.nil?
   .answers
-    = render @question.answers.with_attached_files.order(best: :desc)
+    = render @question.answers.with_attached_files.order(best: :desc, created_at: :asc)
 
   - answer = @answer || @question.answers.new
   = render template: 'answers/_form', locals: { question: @question, answer: answer }
