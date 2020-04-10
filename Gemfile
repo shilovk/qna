@@ -35,6 +35,7 @@ gem 'cocoon'
 gem 'devise'
 gem 'jquery-rails'
 gem 'omniauth'
+gem 'omniauth-facebook'
 gem 'omniauth-github'
 gem 'slim-rails'
 
@@ -59,6 +60,7 @@ end
 group :test do
   # Adds support for Capybara system testing and selenium driver
   gem 'capybara', '>= 2.15'
+  gem 'capybara-email'
   gem 'launchy'
   gem 'rails-controller-testing'
   gem 'selenium-webdriver'
