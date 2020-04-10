@@ -34,6 +34,8 @@ gem 'cocoon'
 # gem 'decent_exposure', '3.0.0'
 gem 'devise'
 gem 'jquery-rails'
+gem 'omniauth'
+gem 'omniauth-github'
 gem 'slim-rails'
 
 group :development, :test do
