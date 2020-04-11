@@ -3,5 +3,5 @@
 class OauthCallbacksController < Devise::OmniauthCallbacksController
   include Oauth
 
-  Devise.omniauth_configs.keys.each { |service| define_method(service) {} }
+  Devise.omniauth_configs.each_key { |service| define_method(service) {} }
 end
