@@ -40,7 +40,6 @@ Rails.application.configure do
   # Tell Action Mailer not to deliver emails to the real world.
   # The :test delivery method accumulates sent emails in the
   # ActionMailer::Base.deliveries array.
-  config.action_mailer.delivery_method = :test
 
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr
@@ -49,4 +48,7 @@ Rails.application.configure do
   # config.action_view.raise_on_missing_translations = true
 
   config.action_cable.disable_request_forgery_protection = true
+
+  config.action_mailer.delivery_method = :letter_opener
+  config.action_mailer.perform_deliveries = true
 end

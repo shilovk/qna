@@ -14,7 +14,7 @@ class User < ApplicationRecord
   has_many :authorizations, dependent: :destroy
 
   def self.find_for_oauth(auth)
-    FindForOauth.new(auth).call
+    FindForOauth.new(auth).call if auth
   end
 
   def author?(record)

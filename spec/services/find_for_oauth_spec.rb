@@ -4,13 +4,22 @@ require 'rails_helper'
 
 RSpec.describe FindForOauth do
   let!(:user) { create(:user) }
-  let(:auth) { OmniAuth::AuthHash.new(provider: 'facebook', uid: '123456') }
+  let(:auth) { OmniAuth::AuthHash.new(provider: 'github', uid: '123456') }
   subject { FindForOauth.new(auth) }
 
-  context 'user already had authorization' do
+  context 'user already has authorization' do
+    let!(:authorization) { create(:authorization, provider: 'github', uid: '123456', user: user) }
+
     it 'returns the user' do
-      user.authorizations.create(provider: 'facebook', uid: '123456')
       expect(subject.call).to eq user
+    end
+
+    it 'not creates new users' do
+      expect { subject.call }.to_not change(User, :count)
+    end
+
+    it 'not creates new authorizations' do
+      expect { subject.call }.to_not change(Authorization, :count)
     end
   end
 
