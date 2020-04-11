@@ -27,11 +27,11 @@ feature 'User can sign in with Oauth' do
     end
 
     scenario 'have handle authentication error' do
-       OmniAuth.config.mock_auth[:github] = :invalid_credentials
+      OmniAuth.config.mock_auth[:github] = :invalid_credentials
 
-       click_link 'Sign in with GitHub'
+      click_link 'Sign in with GitHub'
 
-       expect(page).to have_content('Invalid credentials')
-     end
+      expect(page).to have_content('Invalid credentials')
+    end
   end
 end

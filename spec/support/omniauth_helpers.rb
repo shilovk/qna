@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module OmniauthHelpers
   def oauth_facebook
     OmniAuth.config.mock_auth[:facebook] = OmniAuth::AuthHash.new(
