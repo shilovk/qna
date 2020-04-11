@@ -2,6 +2,8 @@
 
 FactoryBot.define do
   factory :vote do
+    user
+    votable
     value { 0 }
   end
 end

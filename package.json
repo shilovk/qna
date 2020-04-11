@@ -7,6 +7,8 @@
     "@rails/ujs": "^6.0.0",
     "@rails/webpacker": "4.2.2",
     "cocoon-js": "^0.0.5",
+    "coffee-loader": "^0.9.0",
+    "coffeescript": "1.12.7",
     "jquery": "^3.4.1",
     "turbolinks": "^5.2.0"
   },

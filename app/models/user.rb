@@ -10,11 +10,15 @@ class User < ApplicationRecord
   has_many :answers
   has_many :awards, dependent: :destroy
   has_many :votes
+<<<<<<< HEAD
   has_many :authorizations, dependent: :destroy
 
   def self.find_for_oauth(auth)
     FindForOauth.new(auth).call
   end
+=======
+  has_many :comments
+>>>>>>> master
 
   def author?(record)
     id == record&.user_id
