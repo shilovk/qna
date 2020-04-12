@@ -59,10 +59,11 @@ feature 'User can edit his question', "
       end
     end
 
-    scenario 'deletes file on his question' do
-      click_on 'Remove file'
+    scenario 'deletes file on his question', js: true do
+      page.accept_confirm do
+        click_on 'Remove file'
+      end
 
-      expect(page).to have_content 'Your file succesfully deleted.'
       expect(page).to_not have_link 'rails_helper.rb'
       expect(page).to_not have_content question.files.first
     end

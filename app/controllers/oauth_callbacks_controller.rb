@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class OauthCallbacksController < Devise::OmniauthCallbacksController
+  skip_authorization_check
+
   before_action :oauth
 
   Devise.omniauth_configs.each_key { |service| define_method(service) {} }

@@ -111,11 +111,6 @@ RSpec.describe CommentsController, type: :controller do
       it 'does not delete comment' do
         expect { delete :destroy, params: { id: comment }, format: :js }.to_not change(question.comments, :count)
       end
-
-      it 'render destroy template' do
-        delete :destroy, params: { id: comment }, format: :js
-        expect(response).to render_template :destroy
-      end
     end
   end
 end

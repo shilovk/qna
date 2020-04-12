@@ -7,19 +7,17 @@ class CommentsController < ApplicationController
   before_action :load_resource, only: %i[update destroy]
   after_action :broadcast_comment
 
+  authorize_resource
+
   def create
     @comment = @resource.comments.create(comment_params.merge(user_id: current_user.id))
   end
 
   def update
-    return unless current_user&.author?(comment)
-
     @comment.update(comment_params)
   end
 
   def destroy
-    return unless current_user&.author?(comment)
-
     @comment.destroy
   end
 

@@ -7,6 +7,8 @@ class QuestionsController < ApplicationController
   before_action :load_question, only: %i[show edit update destroy up down]
   after_action :broadcast_question, only: :create
 
+  authorize_resource
+
   def index
     @questions = Question.all
   end
@@ -35,19 +37,13 @@ class QuestionsController < ApplicationController
   end
 
   def update
-    return unless current_user&.author?(@question)
-
     @question.update(question_params)
     @hide_answers = true
   end
 
   def destroy
-    if current_user&.author?(@question)
-      @question.destroy
-      redirect_to questions_path, notice: 'Your question was succesfully deleted.'
-    else
-      redirect_to @question, alert: 'You are not the author of this question.'
-    end
+    @question.destroy
+    redirect_to questions_path, notice: 'Your question was succesfully deleted.'
   end
 
   private

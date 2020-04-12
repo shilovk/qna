@@ -5,9 +5,10 @@
     p.view
       = comment.body
 
-    - if current_user&.author?(comment)
+    - if can? :edit, comment
+      => link_to 'Edit', '', class: 'edit-comment-link'
 
       = render 'comments/form', comment: comment
 
-      => link_to 'Edit', '', class: 'edit-comment-link'
+    - if can? :destroy, comment
       = link_to 'Delete', comment_path(comment), method: :delete, remote: true, data: { confirm: 'Are you sure?' }, class: 'delete-comment-link'

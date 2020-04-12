@@ -30,6 +30,7 @@ gem 'bootsnap', '>= 1.4.2', require: false
 
 gem 'actionview', '>= 6.0.2.2'
 gem 'aws-sdk-s3', require: false
+gem 'cancancan'
 gem 'cocoon'
 # gem 'decent_exposure', '3.0.0'
 gem 'devise'
