@@ -8,18 +8,12 @@
   p
     = @question.body
 
-  - if @question.files.attached?
-    - @question.files.each do |file|
-      p
-        = link_to file.filename.to_s, url_for(file)
-        - if current_user&.author?(@question)
-          = link_to 'Remove file', attachment_path(file), method: :delete, data: { confirm: 'Are you sure?' }
+  = render 'shared/show_files', files: @question.files
 
   = render 'shared/show_links', links: @question.links
 
-  - if current_user&.author?(@question)
-    p
-      = link_to 'Edit question', '#', class: 'edit-question-link'
+  - if can? :edit, @question
+    => link_to 'Edit question', '#', class: 'edit-question-link'
 
     = form_with model: @question, class: 'hidden', html: { id: "edit-question" } do |f|
       = f.label :title
@@ -31,8 +25,8 @@
       = render 'shared/add_links', record: f
       = f.submit 'Save question'
 
-    p
-      = link_to 'Delete', question_path(@question), method: :delete, data: { confirm: 'Are you sure?' }
+  - if can? :destroy, @question
+    = link_to 'Delete', question_path(@question), method: :delete, data: { confirm: 'Are you sure?' }
 
   = render 'comments/comments', resource: @question
 

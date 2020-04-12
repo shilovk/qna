@@ -8,14 +8,12 @@ module Voted
   end
 
   def up
-    resource.vote_up unless current_user.author?(resource)
-
+    resource.vote_up
     render json: { score: resource.score }
   end
 
   def down
-    resource.vote_down unless current_user.author?(resource)
-
+    resource.vote_down
     render json: { score: resource.score }
   end
 

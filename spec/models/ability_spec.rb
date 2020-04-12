@@ -22,20 +22,41 @@ RSpec.describe Ability do
     let(:user) { create :user }
     let(:other_user) { create :user }
 
-    let(:question) { create(:question, user_id: user.id) }
-    let(:answer) { create(:answer, user_id: user.id) }
+    let(:question) { create(:question, :with_file, user_id: user.id) }
+    let(:answer) { create(:answer, :with_file, user_id: user.id) }
     let(:comment) { create(:comment, user_id: user.id) }
+    let(:link_for_question) { create(:link, linkable: question) }
+    let(:link_for_answer) { create(:link, linkable: answer) }
 
-    let(:other_question) { create(:question, user_id: other_user.id) }
-    let(:other_answer) { create(:answer, user_id: other_user.id) }
+    let(:other_question) { create(:question, :with_file, user_id: other_user.id) }
+    let(:other_answer) { create(:answer, :with_file, user_id: other_user.id) }
     let(:other_comment) { create(:comment, user_id: other_user.id) }
+    let(:other_link_for_question) { create(:link, linkable: other_question) }
+    let(:other_link_for_answer) { create(:link, linkable: other_answer) }
+
 
     it { should_not be_able_to :manage, :all }
     it { should be_able_to :read, :all }
-    it { should be_able_to :create, Question, Answer, Comment }
+    it { should be_able_to :create, Question, Answer, Comment, Link, Award }
 
-    it { should be_able_to %i[update destroy], question, answer, comment }
-    it { should_not be_able_to %i[update destroy], other_question, other_answer, other_comment }
+    it { should be_able_to %i[update destroy],
+      question,
+      answer,
+      comment,
+      question.files.first,
+      question.links.first,
+      answer.files.first,
+      answer.links.first
+    }
+
+    it { should_not be_able_to %i[update destroy],
+      other_question, other_answer,
+      other_comment,
+      other_question.files.first,
+      other_answer.files.first,
+      other_question.links.first,
+      other_answer.links.first
+     }
 
     it { should be_able_to %i[up down], other_question, other_answer }
     it { should_not be_able_to %i[up down], question, answer }

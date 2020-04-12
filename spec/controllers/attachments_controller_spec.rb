@@ -1,34 +1,53 @@
-# frozen_string_literal: true
-
 require 'rails_helper'
 
 RSpec.describe AttachmentsController, type: :controller do
-  let(:user) { create(:user) }
-  let!(:question) { create(:question, :with_file, user: user) }
-  let!(:answer) { create(:answer, :with_file, user: user) }
-
   describe 'DELETE #destroy' do
-    before { login(user) }
+    let!(:file) { fixture_file_upload("#{Rails.root}/spec/rails_helper.rb", 'text/plain') }
+    let!(:user) { create(:user) }
 
-    context 'User tries tries to delete file on his resource' do
-      it 'user deletes file on his question' do
-        expect { delete :destroy, params: { id: question.files.first.id } }.to change(question.files, :count).by(-1)
+    context 'authenticated user' do
+      before { login(user) }
+
+      context 'is author of the resource' do
+        let!(:resource) { create(:question, files: [file], user: user) }
+
+        it 'author can remove attached file' do
+          expect { delete :destroy, params: { id: resource.files.first }, format: :js }.to change(resource.files, :count).by(-1)
+        end
+
+        it 'render destroy' do
+          delete :destroy, params: { id: resource.files.first }, format: :js
+
+          expect(response).to render_template :destroy
+        end
       end
 
-      it 'user deletes file on his answer' do
-        expect { delete :destroy, params: { id: answer.files.first.id } }.to change(answer.files, :count).by(-1)
+      context 'is not author of the resource' do
+        let!(:resource) { create(:question, files: [file]) }
+
+        it "can't remove attached file" do
+          expect { delete :destroy, params: { id: resource.files.first }, format: :js }.to_not change(resource.files, :count)
+        end
+
+        it 'render destroy' do
+          delete :destroy, params: { id: resource.files.first }, format: :js
+
+          expect(response).to render_template :destroy
+        end
       end
     end
 
-    context 'User tries tries to delete file on not his resource' do
-      before { sign_in(create(:user)) }
+    context 'unauthenticated user' do
+      let!(:resource) { create(:question, files: [file]) }
 
-      it 'user tries to delete file on not his question' do
-        expect { delete :destroy, params: { id: question.files.first.id } }.to_not change(question.files, :count)
+      it "can't remove attached file" do
+        expect { delete :destroy, params: { id: resource.files.first }, format: :js }.to_not change(resource.files, :count)
       end
 
-      it 'user tries to delete file on not his answer' do
-        expect { delete :destroy, params: { id: answer.files.first.id } }.to_not change(answer.files, :count)
+      it '401 status' do
+        delete :destroy, params: { id: resource.files.first }, format: :js
+
+        expect(response).to have_http_status(401)
       end
     end
   end

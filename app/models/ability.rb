@@ -24,15 +24,20 @@ class Ability
 
   def user_abilities
     guest_abilities
-    can :create, [Question, Answer, Comment]
-    can %i[update destroy], [Question, Answer, Comment], user: user
 
-    can :vote, [Question, Answer] do |resource|
-      resource.user != user
-    end
+    can :create, [Question, Answer, Comment, ActiveStorage::Attachment, Link, Award]
 
-    can :best, Answer do |answer|
-      answer.question.user == user
-    end
+    can %i[update destroy], [Question, Answer, Comment], user_id: user.id
+
+    can :destroy, ActiveStorage::Attachment, record: { user_id: user.id }
+
+    can %i[up down], [Question, Answer]
+    cannot %i[up down], [Question, Answer], user_id: user.id
+
+    can :best, Answer, question: { user_id: user.id }
+
+    can %i[update destroy], Link, linkable: { user_id: user.id }
+
+    can %i[update destroy], Award, question: { user_id: user.id }
   end
 end

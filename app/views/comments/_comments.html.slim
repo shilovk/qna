@@ -3,11 +3,9 @@
   p Comments
 
   .list
-
     = render resource.comments
 
-  - if current_user
-
+  - if can? :create, Comment
     = link_to 'Add a comment', '', class: 'add-comment-link'
 
     = render 'comments/form', resource: resource

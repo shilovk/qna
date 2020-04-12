@@ -1,0 +1,6 @@
+var file = $('#file-<%= @attachment.id %>')
+var errors = file.find('.file-errors')
+file.html('<%= render 'shared/errors', resource: @attachment %>')
+<% unless @attachment.errors.present? %>
+  file.remove()
+<% end %>

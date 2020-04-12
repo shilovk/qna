@@ -5,7 +5,11 @@ class ApplicationController < ActionController::Base
 
   rescue_from CanCan::AccessDenied do |exception|
     if current_user
-      redirect_back fallback_location: request.fullpath, alert: exception.message
+      respond_to do |format|
+        format.html { redirect_back fallback_location: request.fullpath, alert: exception.message }
+        format.js { render params[:action], status: :unauthorized }
+        format.json { render json: {}, status: :unauthorized }
+      end
     else
       session[:next] = request.fullpath
       redirect_to sign_in_url, alert: 'You have to log in to continue.'

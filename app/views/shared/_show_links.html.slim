@@ -2,5 +2,6 @@
   p Links:
   ul
     - links.each do |link|
-      li
+      li id="link-#{link.id}"
+        .link-errors
         = parsed_url(link.url, link.name)

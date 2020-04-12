@@ -60,10 +60,11 @@ feature 'User can edit answer', "
       end
     end
 
-    scenario 'deletes file on his answer' do
-      click_on 'Remove file'
+    scenario 'deletes file on his answer', js: true do
+      page.accept_confirm do
+        click_on 'Remove file'
+      end
 
-      expect(page).to have_content 'Your file succesfully deleted.'
       expect(page).to_not have_link 'rails_helper.rb'
       expect(page).to_not have_content answer.files.first
     end
