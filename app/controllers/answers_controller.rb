@@ -8,6 +8,8 @@ class AnswersController < ApplicationController
   before_action :load_answer, only: %i[show update destroy best up down]
   after_action :broadcast_answer, only: :create
 
+  authorize_resource
+
   def show; end
 
   def create
@@ -15,26 +17,17 @@ class AnswersController < ApplicationController
   end
 
   def update
-    return unless current_user&.author?(@answer)
-
     @answer.update(answer_params)
     @question = @answer.question
   end
 
   def destroy
-    message = if current_user&.author?(@answer)
-                @answer.destroy
-                { notice: 'Your answer was succesfully deleted.' }
-              else
-                { alert: 'You are not the author of this question.' }
-    end
+    @answer.destroy
+    message = { notice: 'Your answer was succesfully deleted.' }
   end
 
   def best
     @question = @answer.question
-
-    return unless current_user&.author?(@question)
-
     @answer.set_best
   end
 

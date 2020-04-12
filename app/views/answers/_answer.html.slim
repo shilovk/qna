@@ -6,7 +6,7 @@
       - if answer.best
         b Best answer
 
-      - if current_user&.author?(answer.question)
+      - elsif can? :best, answer
         = link_to 'Set the best', best_answer_path(answer), id: "best-answer-#{answer.id}", remote: true, method: :patch
 
     = render 'shared/vote', resource: answer
@@ -18,12 +18,12 @@
       - answer.files.each do |file|
         p
           = link_to file.filename.to_s, url_for(file)
-          - if current_user&.author?(answer)
+          - if can? :update, answer
             = link_to 'Remove file', attachment_path(file), method: :delete, data: { confirm: 'Are you sure?' }
 
     = render 'shared/show_links', links: answer.links
 
-    - if current_user&.author?(answer)
+    - if can? :update, answer
       = form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|
         = f.label :body, 'Change answer'
         = f.text_area :body
@@ -33,6 +33,8 @@
         = f.submit 'Save answer'
 
       => link_to 'Edit answer', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
+
+    - if can? :destroy, answer
       = link_to 'Delete answer',
                 answer_path(answer),
                 method: :delete,
