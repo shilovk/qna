@@ -8,6 +8,5 @@ class LinksController < ApplicationController
     authorize! :destroy, @link
 
     @link.destroy
-    message = { notice: 'Your link succesfully deleted.' }
   end
 end

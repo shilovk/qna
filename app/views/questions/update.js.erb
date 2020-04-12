@@ -1,6 +1,7 @@
-var question = document.querySelector('.question');
-var errors = question.querySelector('.question-errors');
-errors.innerHTML = '<%= render 'shared/errors', resource: @question %>';
+var question = document.querySelector('.question')
+var errors = question.querySelector('.question-errors')
+
+errors.innerHTML = '<%= render 'shared/errors', resource: @question %>'
 <% unless @question.errors.present? %>
-  question.innerHTML = '<%= j render template: 'questions/show' %>';
+  question.innerHTML = '<%= j render template: 'questions/show' %>'
 <% end %>

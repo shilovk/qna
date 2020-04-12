@@ -1,6 +1,7 @@
-$('.answer-errors').html('<%= render 'shared/errors', resource: @answer %>')
+var answer = $('.new-answer')
+answer.find('.answer-errors').html('<%= render 'shared/errors', resource: @answer %>')
 
 <% if @answer.persisted? %>
   $('.answers').append('<%= j render @answer %>')
-  $('.new-answer').closest('form').find('input[type=text], textarea').val('');
+  answer.closest('form').find('input[type=text], textarea').val('')
 <% end %>
