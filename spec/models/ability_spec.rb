@@ -34,29 +34,30 @@ RSpec.describe Ability do
     let(:other_link_for_question) { create(:link, linkable: other_question) }
     let(:other_link_for_answer) { create(:link, linkable: other_answer) }
 
-
     it { should_not be_able_to :manage, :all }
     it { should be_able_to :read, :all }
     it { should be_able_to :create, Question, Answer, Comment, Link, Award }
 
-    it { should be_able_to %i[update destroy],
-      question,
-      answer,
-      comment,
-      question.files.first,
-      question.links.first,
-      answer.files.first,
-      answer.links.first
+    it {
+      should be_able_to %i[update destroy],
+                        question,
+                        answer,
+                        comment,
+                        question.files.first,
+                        question.links.first,
+                        answer.files.first,
+                        answer.links.first
     }
 
-    it { should_not be_able_to %i[update destroy],
-      other_question, other_answer,
-      other_comment,
-      other_question.files.first,
-      other_answer.files.first,
-      other_question.links.first,
-      other_answer.links.first
-     }
+    it {
+      should_not be_able_to %i[update destroy],
+                            other_question, other_answer,
+                            other_comment,
+                            other_question.files.first,
+                            other_answer.files.first,
+                            other_question.links.first,
+                            other_answer.links.first
+    }
 
     it { should be_able_to %i[up down], other_question, other_answer }
     it { should_not be_able_to %i[up down], question, answer }
