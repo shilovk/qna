@@ -26,4 +26,12 @@ Rails.application.routes.draw do
       patch :best, on: :member
     end
   end
+
+  namespace :api do
+    namespace :v1 do
+      resources :profiles, only: [] do
+        get :me, on: :collection
+      end
+    end
+  end
 end
