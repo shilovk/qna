@@ -79,7 +79,7 @@ AllCops:
 Style/Documentation:
   Enabled: false
 
-Metrics/LineLength:
+Layout/LineLength:
   Max: 150
 
 Metrics/MethodLength:
@@ -110,4 +110,10 @@ Style/HashTransformValues:
   Enabled: true
 
 Metrics/BlockLength:
-  Max: 30
+  Max: 60
+
+Lint/RaiseException:
+  Enabled: true
+
+Lint/StructNewOverride:
+  Enabled: true
