@@ -33,7 +33,7 @@ Rails.application.routes.draw do
         get :me, on: :collection
       end
 
-      resources :questions, only: :index
+      resources :questions, only: %i[index show]
     end
   end
 end
