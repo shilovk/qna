@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 shared_examples 'API Attachable' do
   let(:file_response) { resource_response['files'].first }
-  let(:first_file) { files.first }
+  let(:first_file) { resource.files.first }
   let(:path) { rails_blob_path(first_file, disposition: 'attachment', only_path: true) }
 
   it 'returns list of files' do
-    expect(resource_response['files'].count).to eq files.count
+    expect(resource_response['files'].count).to eq resource.files.count
   end
 
   it 'returns id' do

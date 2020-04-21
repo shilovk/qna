@@ -2,24 +2,24 @@
 
 require 'rails_helper'
 
-describe 'Questions API', type: :request do
+describe 'Answers API', type: :request do
   let(:headers) do
     { 'CONTENT_TYPE' => 'application/json',
       'ACCEPT' => 'application/json' }
   end
   let(:access_token) { create(:access_token) }
-  let(:fields) { %w[id title body created_at updated_at] }
+  let(:fields) { %w[id body created_at updated_at] }
 
-  describe 'GET /api/v1/questions' do
+  describe 'GET /api/v1/questions/:id/answers' do
     let(:method) { :get }
-    let(:api_path) { '/api/v1/questions' }
+    let(:question) { create(:question, answers: create_list(:answer, 2)) }
+    let(:api_path) { api_v1_question_answers_path(question) }
 
     it_behaves_like 'API Authorizable'
 
     context 'authorized' do
-      let!(:questions) { create_list(:question, 2) }
-      let(:resource) { questions.first }
-      let(:resource_response) { json['questions'].first }
+      let(:resource) { question.answers.first }
+      let(:resource_response) { json['answers'].first }
 
       before do
         do_request method, api_path, params: { access_token: access_token.token }, headers: headers
@@ -29,31 +29,31 @@ describe 'Questions API', type: :request do
         expect(response).to be_successful
       end
 
-      it 'returns list of questions' do
-        expect(json['questions'].size).to eq 2
+      it 'returns all answers of the question' do
+        expect(json['answers'].size).to eq 2
       end
 
       include_examples 'API public fields returnable'
 
-      it 'contains user object' do
+      it 'contains answer\'s question object' do
+        expect(resource_response['question']['id']).to eq resource.question.id
+      end
+
+      it 'contains answer\'s user object' do
         expect(resource_response['user']['id']).to eq resource.user.id
       end
-
-      it 'contains short title' do
-        expect(resource_response['short_title']).to eq resource.title.truncate(7)
-      end
     end
-  end # desc GET /api/v1/questions
+  end # desc GET /api/v1/questions/:id/answers
 
-  describe 'GET /api/v1/questions/:id' do
+  describe 'GET /api/v1/answers/:id' do
     let(:method) { :get }
-    let!(:resource) { create(:question, :with_files, :with_comments, :with_links) }
-    let(:api_path) { api_v1_question_path(resource) }
+    let!(:resource) { create(:answer, :with_files, :with_comments, :with_links) }
+    let(:api_path) { api_v1_answer_path(resource) }
 
     it_behaves_like 'API Authorizable'
 
     context 'authorized' do
-      let(:resource_response) { json['question'] }
+      let(:resource_response) { json['answer'] }
 
       before do
         do_request method, api_path, params: { access_token: access_token.token }, headers: headers
@@ -71,5 +71,5 @@ describe 'Questions API', type: :request do
         it_behaves_like 'API Commentable'
       end
     end
-  end # desc GET /api/v1/questions/:id
+  end # desc GET /api/v1/answers/:id
 end

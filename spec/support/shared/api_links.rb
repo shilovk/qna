@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 shared_examples 'API Linkable' do
-  let(:link) { links.first }
+  let(:link) { resource.links.first }
   let(:links_response) { resource_response['links'].first }
 
   it 'returns list of links' do
-    expect(resource_response['links'].size).to eq links.count
+    expect(resource_response['links'].size).to eq resource.links.count
   end
 
   it 'returns all public fields' do

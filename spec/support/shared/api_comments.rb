@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 shared_examples 'API Commentable' do
-  let(:comment) { comments.first }
+  let(:comment) { resource.comments.first }
   let(:comments_response) { resource_response['comments'].first }
 
   it 'returns list of comments' do
-    expect(resource_response['comments'].size).to eq comments.count
+    expect(resource_response['comments'].size).to eq resource.comments.count
   end
 
   it 'returns all public fields' do
