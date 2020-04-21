@@ -160,6 +160,38 @@ describe 'Questions API', type: :request do
         let(:resource_response) { json['question'] }
         let(:fields) { %w[id title body created_at updated_at] }
       end
-    end # authorized
+    end
   end # PATCH /api/v1/questions/:id
+
+  describe 'DELETE /api/v1/questions/:id' do
+    let(:method) { :delete }
+    let!(:question) { create(:question, user: current_user) }
+    let(:api_path) { api_v1_question_path(question) }
+
+    it_behaves_like 'API Authorizable'
+
+    context 'authorized' do
+      let(:request_params) do
+        { access_token: access_token.token }
+      end
+
+      before do
+        do_request method, api_path, params: request_params, headers: headers
+      end
+
+      it 'returns success status' do
+        expect(response).to be_successful
+      end
+
+      it 'question not found' do
+        expect { Question.find(question.id) }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+
+      include_examples 'API public fields returnable' do
+        let(:resource) { question }
+        let(:resource_response) { json['question'] }
+        let(:fields) { %w[title body created_at updated_at] }
+      end
+    end
+  end # DELETE /api/v1/questions/:id
 end
