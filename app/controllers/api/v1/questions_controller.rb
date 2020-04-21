@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Api::V1::QuestionsController < Api::V1::BaseController
-  before_action :load_question, only: %i[show]
+  before_action :load_question, only: %i[show update]
 
   authorize_resource
 
@@ -22,6 +22,14 @@ class Api::V1::QuestionsController < Api::V1::BaseController
 
   def show
     render json: @question
+  end
+
+  def update
+    if @question.update(question_params)
+      render json: @question, status: :created
+    else
+      render json: { errors: @question.errors }, status: :unprocessable_entity
+    end
   end
 
   private

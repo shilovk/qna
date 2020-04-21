@@ -7,7 +7,8 @@ describe 'Questions API', type: :request do
     { 'CONTENT_TYPE' => 'application/json',
       'ACCEPT' => 'application/json' }
   end
-  let(:access_token) { create(:access_token) }
+  let(:current_user) { create(:user) }
+  let(:access_token) { create(:access_token, resource_owner_id: current_user.id) }
   let(:fields) { %w[id title body created_at updated_at] }
 
   describe 'GET /api/v1/questions' do
@@ -79,7 +80,57 @@ describe 'Questions API', type: :request do
 
     it_behaves_like 'API Authorizable'
 
-    context 'successful create' do
+    describe 'authorize' do
+      context 'successful create' do
+        let(:request_params) do
+          { question: attributes_for(:question),
+            access_token: access_token.token }
+        end
+
+        before do
+          do_request method, api_path, params: request_params, headers: headers
+        end
+
+        it 'returns 200 status' do
+          expect(response).to be_successful
+        end
+
+        include_examples 'API public fields returnable' do
+          let(:resource) { Question.last }
+          let(:resource_response) { json['question'] }
+          let(:fields) { %w[id title body created_at updated_at] }
+        end
+      end
+
+      context 'tries to create with errors' do
+        let(:request_params) do
+          { access_token: access_token.token,
+            question: attributes_for(:question, :invalid) }
+        end
+
+        before do
+          do_request method, api_path, params: request_params, headers: headers
+        end
+
+        it 'return failed status' do
+          expect(response.status).to eq 422
+        end
+
+        it 'return errors' do
+          expect(json['errors']).to_not eq nil
+        end
+      end
+    end
+  end # desc POST /api/v1/questions
+
+  describe 'PATCH /api/v1/questions/:id' do
+    let(:method) { :patch }
+    let!(:question) { create(:question, user: current_user) }
+    let(:api_path) { api_v1_question_path(question) }
+
+    it_behaves_like 'API Authorizable'
+
+    context 'authorized' do
       let(:request_params) do
         { question: attributes_for(:question),
           access_token: access_token.token }
@@ -87,36 +138,28 @@ describe 'Questions API', type: :request do
 
       before do
         do_request method, api_path, params: request_params, headers: headers
+        question.reload
       end
 
-      it 'returns 200 status' do
+      it 'returns success status' do
         expect(response).to be_successful
       end
 
+      it 'unset attributes not be blank' do
+        expect(json['question']['body']).to_not be_empty
+      end
+
+      include_examples 'API fields updatable' do
+        let(:resource) { Question.find(question.id) }
+        let(:resource_request_params) { request_params[:question] }
+        let(:update_fields) { %w[title body] }
+      end
+
       include_examples 'API public fields returnable' do
-        let(:resource) { Question.last }
+        let(:resource) { Question.find(question.id) }
         let(:resource_response) { json['question'] }
         let(:fields) { %w[id title body created_at updated_at] }
       end
-    end
-
-    context 'tries to create with errors' do
-      let(:request_params) do
-        { access_token: access_token.token,
-          question: attributes_for(:question, :invalid) }
-      end
-
-      before do
-        do_request method, api_path, params: request_params, headers: headers
-      end
-
-      it 'return failed status' do
-        expect(response.status).to eq 422
-      end
-
-      it 'return errors' do
-        expect(json['errors']).to_not eq nil
-      end
-    end
-  end # desc POST /api/v1/questions
+    end # authorized
+  end # PATCH /api/v1/questions/:id
 end
