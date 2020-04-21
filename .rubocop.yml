@@ -117,3 +117,6 @@ Lint/RaiseException:
 
 Lint/StructNewOverride:
   Enabled: true
+
+Style/CommentedKeyword:
+  Enabled: false
