@@ -72,4 +72,52 @@ describe 'Questions API', type: :request do
       end
     end
   end # desc GET /api/v1/questions/:id
+
+  describe 'POST /api/v1/questions' do
+    let(:method) { :post }
+    let(:api_path) { api_v1_questions_path() }
+
+    it_behaves_like 'API Authorizable'
+
+    context 'successful create' do
+      let(:request_params) {
+        { question: attributes_for(:question),
+          access_token: access_token.token
+        }
+      }
+
+      before do
+        do_request method, api_path, params: request_params, headers: headers
+      end
+
+      it 'returns 200 status' do
+        expect(response).to be_successful
+      end
+
+      include_examples 'API public fields returnable' do
+        let(:resource) { Question.last }
+        let(:resource_response) { json['question'] }
+        let(:fields) { %w[title body created_at updated_at] }
+      end
+    end
+
+    # context 'tries to create with errors' do
+    #   let(:request_params) do
+    #     access_token: access_token.token
+    #     question: attributes_for(:question, :invalid)
+    #   end
+    #
+    #   before do
+    #     do_request method, api_path, params: request_params, headers: headers
+    #   end
+    #
+    #   it 'returns failed status' do
+    #     expect(response.status).to eq 422
+    #   end
+    #
+    #   it 'returns errors' do
+    #     expect(json['errors']).to have_key('body')
+    #   end
+    # end
+  end # desc POST /api/v1/questions
 end
