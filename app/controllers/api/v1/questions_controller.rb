@@ -6,13 +6,11 @@ class Api::V1::QuestionsController < Api::V1::BaseController
   authorize_resource
 
   def index
-    authorize! :index, Question
     @questions = Question.all
     render json: @questions
   end
 
   def show
-    authorize! :index, @question
     render json: @question
   end
 

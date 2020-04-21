@@ -5,9 +5,9 @@ class QuestionSerializer < ActiveModel::Serializer
 
   belongs_to :user
   has_many :answers
-  has_many :comments
+  has_many :comments, as: :commentable
   has_many :files
-  has_many :links do
+  has_many :links, as: :linkable do
     object.links.order(id: :asc)
   end
 
