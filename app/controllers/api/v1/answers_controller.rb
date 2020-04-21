@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class Api::V1::AnswersController < Api::V1::BaseController
-  before_action :set_question, only: %i[index]
-  before_action :set_answer, except: %i[index]
+  before_action :load_question, only: %i[index create]
+  before_action :load_answer, except: %i[index create]
 
   authorize_resource
 
@@ -11,17 +11,31 @@ class Api::V1::AnswersController < Api::V1::BaseController
     render json: @answers
   end
 
+  def create
+    @answer = @question.answers.new(answer_params.merge(user_id: current_user.id))
+
+    if @answer.save
+      render json: @answer, status: :created
+    else
+      render json: { errors: @answer.errors }, status: :unprocessable_entity
+    end
+  end
+
   def show
     render json: @answer
   end
 
   private
 
-  def set_question
+  def answer_params
+    params.require(:answer).permit(:body, files: [], links_attributes: %i[id name url _destroy])
+  end
+
+  def load_question
     @question = Question.with_attached_files.find(params['question_id'])
   end
 
-  def set_answer
+  def load_answer
     @answer = Answer.find(params['id'])
   end
 end
