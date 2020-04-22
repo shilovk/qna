@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 class ApplicationController < ActionController::Base
-  before_action :gon_user
+  protect_from_forgery with: :exception
+
+  before_action :gon_user, unless: :devise_controller?
 
   rescue_from CanCan::AccessDenied do |exception|
     if current_user
@@ -12,12 +14,11 @@ class ApplicationController < ActionController::Base
       end
     else
       session[:next] = request.fullpath
-      redirect_to sign_in_url, alert: 'You have to log in to continue.'
+      redirect_to new_user_session_path, alert: 'You have to log in to continue.'
     end
   end
 
-  # protect_from_forgery
-  # check_authorization unless: :devise_controller?
+  check_authorization unless: :devise_controller?
 
   private
 

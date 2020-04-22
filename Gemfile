@@ -34,6 +34,7 @@ gem 'cancancan'
 gem 'cocoon'
 # gem 'decent_exposure', '3.0.0'
 gem 'devise'
+gem 'doorkeeper'
 gem 'gon'
 gem 'jquery-rails'
 gem 'omniauth'
@@ -41,6 +42,8 @@ gem 'omniauth-facebook'
 gem 'omniauth-github'
 gem 'slim-rails'
 # gem 'skim'
+gem 'active_model_serializers', '~> 0.10.10'
+gem 'oj'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
