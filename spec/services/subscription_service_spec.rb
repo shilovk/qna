@@ -7,20 +7,30 @@ RSpec.describe SubscriptionService do
     let!(:question) { create(:question, user: create(:user)) }
     let!(:answer) { create(:answer, question: question) }
 
-    context 'for question\'s author' do
-      # let(:subscription) { question.subscriptions.find_by(user_id: question.user_id).include(:user) }
+    it 'sends question new answer for subscribers' do
+      question.subscribers.find_each(batch_size: 500) do |user|
+        expect(SubscriptionMailer).to receive(:question_new_answer).with(answer, user).and_call_original
+      end
 
-      it 'sends question new answer by subscription' do
-        expect(SubscriptionMailer).to receive(:question_new_answer).with(answer, question.user).and_call_original
+      subject.question_new_answer(answer)
+    end
+
+    context 'does not send question new answer' do
+      let!(:unsubscriber) { create(:user) }
+      let!(:other_subscriber) { create(:user, subscriptions: [create(:subscription, :for_question)]) }
+      let(:mailer) { double('SubscriptionMailer') }
+
+      it 'to unsubscriber user' do
+        expect(mailer).to_not receive(:question_new_answer).with(answer, unsubscriber)
+
+        subject.question_new_answer(answer)
+      end
+
+      it 'to other subscriber' do
+        expect(mailer).to_not receive(:question_new_answer).with(answer, other_subscriber)
 
         subject.question_new_answer(answer)
       end
     end
-
-    # context 'for subscriber' do
-    #   let!(:subscriber) { create(:user) }
-    #   let!(:subscription) { create(:subscription, user: subscribed_user, question: question) }
-    #   let!(:unsubscriber) { create(:user) }
-    # end
   end
 end

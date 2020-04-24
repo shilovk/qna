@@ -24,9 +24,49 @@ RSpec.describe Question, type: :model do
     expect(Question.new.files).to be_an_instance_of(ActiveStorage::Attached::Many)
   end
 
-  describe 'subscription' do
-    it 'add author to subscribers after create' do
-      expect(subject.subscribers).to include(subject.user)
+  context 'subscriptions' do
+    let!(:user) { create(:user) }
+    let!(:question) { create(:question) }
+
+    describe '#subscribe(subscriber)' do
+      let!(:subscription) { subject.subscribe(user) }
+
+      it 'creates subscription' do
+        expect { question.subscribe(user) }.to change(Subscription, :count).by(1)
+      end
+
+      it 'attributes must match' do
+        expect(subscription.subscribable).to eq subject
+        expect(subscription.user).to eq user
+      end
+
+      it 'add author to subscribers after create' do
+        expect(subject.subscribers).to include(subject.user)
+      end
+    end
+
+    describe '#unsubscribe(subscriber)' do
+      let!(:subscription) { subject.subscribe(user) }
+
+      it 'removes subscription' do
+        expect { subject.unsubscribe(user) }.to change(Subscription, :count).by(-1)
+      end
+
+      it 'deletes subscription not exists' do
+        expect { subject.unsubscribe(user) }.to change(Subscription.where(subscribable: subject, user: user), :empty?).from(false).to(true)
+      end
+    end
+
+    describe '#subscribed?' do
+      let!(:subscription) { subject.subscribe(user) }
+
+      it 'user has subscription' do
+        expect(subject).to be_subscribed(user)
+      end
+
+      it 'user has not subscription on other question' do
+        expect(question).to_not be_subscribed(user)
+      end
     end
   end
 end

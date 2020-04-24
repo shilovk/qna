@@ -23,11 +23,18 @@ Rails.application.routes.draw do
     end
   end
 
+  concern :subscribable do
+    member do
+      post :subscribe
+      post :unsubscribe
+    end
+  end
+
   resources :attachments, only: :destroy
   resources :awards, only: :index
   resources :links, only: :destroy
 
-  resources :questions, concerns: %i[commentable votable] do
+  resources :questions, concerns: %i[commentable votable subscribable] do
     resources :answers, shallow: true, concerns: %i[commentable votable], except: %i[index new] do
       patch :best, on: :member
     end

@@ -39,5 +39,7 @@ class Ability
     can %i[update destroy], Link, linkable: { user_id: user.id }
 
     can %i[update destroy], Award, question: { user_id: user.id }
+
+    can %i[subscribe unsubscribe], Question
   end
 end

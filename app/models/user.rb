@@ -21,4 +21,20 @@ class User < ApplicationRecord
   def author?(record)
     id == record&.user_id
   end
+
+  # def subscribe!(resource)
+  #   return if subscribed?(resource)
+  #
+  #   subscriptions.create!(subscribable: resource)
+  # end
+  #
+  # def unsubscribe!(resource)
+  #   return unless subscribed?(resource)
+  #
+  #   subscriptions.destroy_by(subscribable: resource)
+  # end
+
+  # def subscribed?(resource)
+  #   subscriptions.exists?(subscribable: resource)
+  # end
 end

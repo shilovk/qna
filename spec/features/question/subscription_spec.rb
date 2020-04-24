@@ -1,0 +1,48 @@
+# frozen_string_literal: true
+
+require 'rails_helper'
+
+feature 'User can subscribe to the question', "
+  In order to receive mail about new answers
+  As an authenticated user
+  I'd like to be able to subscribe to the question
+" do
+  given(:question) { create(:question) }
+  given(:user) { create(:user) }
+  given(:subscribed_question) { create(:question) }
+  given!(:subscription) { create(:subscription, user: user, subscribable: subscribed_question) }
+
+  scenario 'Unauthenticated user tries subscribe' do
+    visit question_path(question)
+
+    expect(page).to_not have_content('Subscribe')
+  end
+
+  describe 'Authenticated user', js: true do
+    background { sign_in(user) }
+
+    scenario 'Authenticated user tries to subscribe' do
+      visit question_path(question)
+
+      expect(page).to have_content('Subscribe')
+      expect(page).to_not have_content('Unsubscribe')
+
+      click_on('Subscribe')
+
+      expect(page).to have_content('Unsubscribe')
+      expect(page).to_not have_content('Subscribe')
+    end
+
+    scenario 'Authenticated user tries to unsubscribe' do
+      visit question_path(subscribed_question)
+
+      expect(page).to_not have_content('Subscribe')
+      expect(page).to have_content('Unsubscribe')
+
+      click_on('Unsubscribe')
+
+      expect(page).to_not have_content('Unsubscribe')
+      expect(page).to have_content('Subscribe')
+    end
+  end
+end

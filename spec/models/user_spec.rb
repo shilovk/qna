@@ -3,6 +3,8 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
+  subject { create(:user) }
+
   it { should have_many(:questions) }
   it { should have_many(:answers) }
   it { should have_many(:awards).dependent(:destroy) }
@@ -28,7 +30,6 @@ RSpec.describe User, type: :model do
 
   describe '#author?' do
     let(:author) { create(:user) }
-    let(:user) { create(:user) }
     let(:question) { create(:question, user: author) }
 
     it 'Returns true if question belongs to user' do
@@ -36,7 +37,7 @@ RSpec.describe User, type: :model do
     end
 
     it 'Returns false if question does not belongs to user' do
-      expect(user).to_not be_author(question)
+      expect(subject).to_not be_author(question)
     end
   end
 end
