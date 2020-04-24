@@ -5,6 +5,8 @@ class Question < ApplicationRecord
   include Votable
   include Commentable
 
+  default_scope { order(created_at: :desc) }
+
   belongs_to :user
   has_one :award, dependent: :destroy
   has_many :answers, dependent: :destroy
@@ -16,6 +18,8 @@ class Question < ApplicationRecord
   validates :title, :body, presence: true
 
   after_create :calculate_reputation
+
+  scope :after_date, ->(date) { where('created_at > ?', date) }
 
   private
 

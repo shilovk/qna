@@ -1,0 +1,7 @@
+Hi, <%= @user.email %>!
+
+New questions for the last day
+
+<% @questions.pluck(:title).each do |question| %>
+  <%= question %>
+<% end %>

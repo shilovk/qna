@@ -1,2 +1,9 @@
-h1 DailyDigest#digest
-p = @greeting + ", find me in app/views/daily_digest_mailer/digest.html.slim"
+h2 Hi, #{@user.email}!
+
+h3 New questions for the last day
+
+- @questions.pluck(:title).each do |question|
+  b
+    = question
+
+hr
