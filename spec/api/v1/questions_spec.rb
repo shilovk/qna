@@ -20,7 +20,7 @@ describe 'Questions API', type: :request do
     context 'authorized' do
       let!(:questions) { create_list(:question, 2) }
       let(:resource) { questions.first }
-      let(:resource_response) { json['questions'].first }
+      let(:resource_response) { json['questions'].last }
 
       before do
         do_request method, api_path, params: { access_token: access_token.token }, headers: headers

@@ -5,7 +5,7 @@ class DailyDigest
     return if Question.after_date(1.day.ago).count.zero?
 
     User.find_each(batch_size: 500) do |user|
-      DailyDigestMailer.digest(user, 1.day.ago).deliver_later
+      DailyDigestMailer.digest(user).deliver_later
     end
   end
 end
