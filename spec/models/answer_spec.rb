@@ -41,5 +41,11 @@ RSpec.describe Answer, type: :model do
     it 'have many attached file' do
       expect(Answer.new.files).to be_an_instance_of(ActiveStorage::Attached::Many)
     end
+
+    it 'perform SubscriptionQuestionJob' do
+      expect(SubscriptionQuestionJob).to receive(:perform_later).with(instance_of(Answer))
+
+      create(:answer)
+    end
   end
 end
