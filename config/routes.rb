@@ -28,11 +28,11 @@ Rails.application.routes.draw do
   resources :links, only: :destroy
 
   resources :questions, concerns: %i[commentable votable] do
-    resources :subscriptions, only: %i[create destroy], shallow: true
-    
     resources :answers, shallow: true, concerns: %i[commentable votable], except: %i[index new] do
       patch :best, on: :member
     end
+
+    resources :subscriptions, shallow: true, only: %i[create destroy]
   end
 
   namespace :api do
