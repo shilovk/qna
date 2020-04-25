@@ -17,7 +17,7 @@ RSpec.describe SubscriptionService do
 
     context 'does not send question new answer' do
       let!(:unsubscriber) { create(:user) }
-      let!(:other_subscriber) { create(:user, subscriptions: [create(:subscription, :for_question)]) }
+      let!(:other_subscriber) { create(:user, subscriptions: [create(:subscription)]) }
       let(:mailer) { double('SubscriptionMailer') }
 
       it 'to unsubscriber user' do

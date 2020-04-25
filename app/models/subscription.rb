@@ -2,7 +2,8 @@
 
 class Subscription < ApplicationRecord
   belongs_to :user
-  belongs_to :subscribable, polymorphic: true, optional: true
+  belongs_to :question
 
-  validates :user, uniqueness: { scope: :subscribable_id }
+  validates :user, :question, presence: true
+  validates :user, uniqueness: { scope: :question_id }
 end

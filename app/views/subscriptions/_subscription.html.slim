@@ -1,11 +1,5 @@
 .subscription
-
-  - if resource.subscribed?(current_user)
-
-    - if can? :unsubscribe, resource
-      = link_to 'Unsubscribe', polymorphic_path(resource, action: :unsubscribe), method: :post, remote: true
-
-  - else
-
-    - if can? :subscribe, resource
-      = link_to 'Subscribe', polymorphic_path(resource, action: :subscribe), method: :post, remote: true
+  - if current_user&.subscribed?(resource)
+    = link_to('Unsubscribe', subscription_path(current_user.subscription(resource)), method: :delete, remote: true)
+  - elsif can? :create, Subscription
+    = link_to('Subscribe', question_subscriptions_path(question_id: resource.id), method: :post, remote: true)

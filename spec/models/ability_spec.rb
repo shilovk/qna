@@ -20,25 +20,24 @@ RSpec.describe Ability do
 
   describe 'for user' do
     let(:user) { create :user }
-    let(:other_user) { create :user }
-
     let(:question) { create(:question, :with_file, user_id: user.id) }
     let(:answer) { create(:answer, :with_file, user_id: user.id) }
     let(:comment) { create(:comment, user_id: user.id) }
     let(:link_for_question) { create(:link, linkable: question) }
     let(:link_for_answer) { create(:link, linkable: answer) }
-    let(:subscription) { create(:subscription, :for_question, user_id: user.id) }
+    let(:subscription) { create(:subscription, user_id: user.id) }
 
+    let(:other_user) { create :user }
     let(:other_question) { create(:question, :with_file, user_id: other_user.id) }
     let(:other_answer) { create(:answer, :with_file, user_id: other_user.id) }
     let(:other_comment) { create(:comment, user_id: other_user.id) }
     let(:other_link_for_question) { create(:link, linkable: other_question) }
     let(:other_link_for_answer) { create(:link, linkable: other_answer) }
-    let(:other_subscription) { create(:subscription, :for_question, user_id: user.id) }
+    let(:other_subscription) { create(:subscription, user_id: other_user.id) }
 
     it { should_not be_able_to :manage, :all }
     it { should be_able_to :read, :all }
-    it { should be_able_to :create, Question, Answer, Comment, Link, Award }
+    it { should be_able_to :create, Question, Answer, Comment, Link, Award, Subscription }
 
     it {
       should be_able_to %i[update destroy],
@@ -51,6 +50,8 @@ RSpec.describe Ability do
                         answer.links.first
     }
 
+    it { should be_able_to :destroy, subscription }
+
     it {
       should_not be_able_to %i[update destroy],
                             other_question, other_answer,
@@ -61,7 +62,7 @@ RSpec.describe Ability do
                             other_answer.links.first
     }
 
-    it { should be_able_to %i[subscribe unsubscribe], question }
+    it { should_not be_able_to :destroy, other_subscription }
 
     it { should be_able_to %i[up down], other_question, other_answer }
     it { should_not be_able_to %i[up down], question, answer }

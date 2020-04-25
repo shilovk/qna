@@ -3,9 +3,6 @@
 FactoryBot.define do
   factory :subscription do
     user
-
-    trait :for_question do
-      subscribable { create(:question) }
-    end
+    question
   end
 end

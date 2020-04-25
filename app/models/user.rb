@@ -22,19 +22,23 @@ class User < ApplicationRecord
     id == record&.user_id
   end
 
-  # def subscribe!(resource)
-  #   return if subscribed?(resource)
-  #
-  #   subscriptions.create!(subscribable: resource)
-  # end
-  #
-  # def unsubscribe!(resource)
-  #   return unless subscribed?(resource)
-  #
-  #   subscriptions.destroy_by(subscribable: resource)
-  # end
+  def subscribe!(question)
+    return if subscribed?(question)
 
-  # def subscribed?(resource)
-  #   subscriptions.exists?(subscribable: resource)
-  # end
+    subscriptions.create!(question: question)
+  end
+
+  def unsubscribe!(question)
+    return unless subscribed?(question)
+
+    subscriptions.destroy_by(question: question)
+  end
+
+  def subscribed?(question)
+    @subscribed ||= subscriptions.exists?(question: question)
+  end
+
+  def subscription(question)
+    @subscription ||= subscriptions.find_by(question_id: question.id)
+  end
 end
