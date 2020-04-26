@@ -1,0 +1,9 @@
+h2 Hi, #{@user.email}!
+
+h3 New questions for the last day
+
+- @questions.pluck(:title).each do |question|
+  b
+    = question
+
+  hr

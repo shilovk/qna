@@ -29,8 +29,9 @@ gem 'jbuilder', '~> 2.7'
 gem 'bootsnap', '>= 1.4.2', require: false
 
 gem 'actionview', '>= 6.0.2.2'
-gem 'aws-sdk-s3', require: false
 gem 'cancancan'
+gem 'active_model_serializers', '~> 0.10.10'
+gem 'aws-sdk-s3', require: false
 gem 'cocoon'
 # gem 'decent_exposure', '3.0.0'
 gem 'devise'
@@ -40,10 +41,12 @@ gem 'jquery-rails'
 gem 'omniauth'
 gem 'omniauth-facebook'
 gem 'omniauth-github'
-gem 'slim-rails'
-# gem 'skim'
-gem 'active_model_serializers', '~> 0.10.10'
 gem 'oj'
+gem 'sidekiq'
+gem 'sinatra', require: false
+gem 'slim-rails'
+gem 'whenever', require: false
+# gem 'skim'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

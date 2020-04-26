@@ -1,10 +1,7 @@
 .vote
-
   - if can? :up, resource
     = link_to 'Up', polymorphic_path(resource, action: :up), method: :post, remote: true, data: { type: :json }
-
   .score
     = resource.score
-
   - if can? :down, resource
     = link_to 'Down', polymorphic_path(resource, action: :down), method: :post, remote: true, data: { type: :json }
