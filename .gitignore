@@ -31,7 +31,10 @@ yarn-debug.log*
 .yarn-integrity
 
 /config/database.yml
-dump.rdb
 
 .DS_Store
 .env
+
+dump.rdb
+/config/*.sphinx.conf
+db/sphinx
