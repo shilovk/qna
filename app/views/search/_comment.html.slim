@@ -1,0 +1,4 @@
+li
+  b
+    = link_to 'open question',  result.commentable.is_a?(Question) ? result.commentable : result.commentable.question
+  = result.body

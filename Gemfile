@@ -33,6 +33,7 @@ gem 'active_model_serializers', '~> 0.10.10'
 gem 'aws-sdk-s3', require: false
 gem 'cancancan'
 gem 'cocoon'
+gem 'database_cleaner-active_record'
 # gem 'decent_exposure', '3.0.0'
 gem 'devise'
 gem 'doorkeeper'

@@ -1,0 +1,6 @@
+.results
+  h2 Results count: #{@search.results.count}
+  - unless @search.results.empty?
+    ul
+      - @search.results.each do |result|
+        = render result.class.name.underscore, result: result

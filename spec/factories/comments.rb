@@ -3,7 +3,7 @@
 FactoryBot.define do
   factory :comment do
     user
-    sequence(:body) { |n| "CommentBody#{n}" }
+    sequence(:body) { |n| "Comment's body #{n}" }
   end
 
   factory :invalid_comment, class: 'Comment' do
