@@ -45,7 +45,6 @@ feature 'User can search in questions, answers, comments ans users', "
     given(:resources) { comments }
     given(:testing_field) { 'body' }
 
-
     it_behaves_like 'Search only in resource'
   end
 

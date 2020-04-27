@@ -4,24 +4,26 @@ require 'sphinx_helper'
 
 RSpec.describe SearchController, type: :controller, sphinx: true do
   describe 'GET #index' do
-    context 'with query' do
-      let!(:questions) { create_list(:question, 2) }
-      let(:search_params) { { query: 'body', scope: 'Question' } }
-      let!(:search) { Search.new(search_params) }
 
-      before do
-        get :index, params: { search: search_params }, format: :js
-      end
+    context 'with query' do
+      let(:search_params) { { query: 'body', scope: 'Question' } }
+      let!(:questions) { create_list(:question, 2) }
 
       it 'render index' do
+        get :index, params: { search: search_params }, format: :js
+
         expect(response).to render_template :index
       end
 
       it 'populates an array' do
+        get :index, params: { search: search_params }, format: :js
+
         expect(assigns(:search).results).to match_array(questions)
       end
 
       it 'assigns @search' do
+        get :index, params: { search: search_params }, format: :js
+
         expect(assigns(:search)).to be_a Search
       end
     end

@@ -14,11 +14,22 @@ RSpec.configure do |config|
     ThinkingSphinx::Test.start_with_autostop
   end
 
+  config.before(:each) do
+    DatabaseCleaner.strategy = :transaction
+  end
+
   config.before(:each, sphinx: true) do
     DatabaseCleaner.strategy = :truncation
-    DatabaseCleaner.start
     # Index data when running an acceptance spec.
     ThinkingSphinx::Test.index
+    DatabaseCleaner.clean
+  end
+
+  config.before(:each) do
+    DatabaseCleaner.start
+  end
+
+  config.after(:suite) do
     DatabaseCleaner.clean
   end
 end
