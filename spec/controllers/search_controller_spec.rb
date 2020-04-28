@@ -4,7 +4,6 @@ require 'sphinx_helper'
 
 RSpec.describe SearchController, type: :controller, sphinx: true do
   describe 'GET #index' do
-
     context 'with query' do
       let(:search_params) { { query: 'body', scope: 'Question' } }
       let!(:questions) { create_list(:question, 2) }
