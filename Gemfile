@@ -29,22 +29,25 @@ gem 'jbuilder', '~> 2.7'
 gem 'bootsnap', '>= 1.4.2', require: false
 
 gem 'actionview', '>= 6.0.2.2'
-gem 'cancancan'
 gem 'active_model_serializers', '~> 0.10.10'
 gem 'aws-sdk-s3', require: false
+gem 'cancancan'
 gem 'cocoon'
+gem 'database_cleaner-active_record'
 # gem 'decent_exposure', '3.0.0'
 gem 'devise'
 gem 'doorkeeper'
 gem 'gon'
 gem 'jquery-rails'
+gem 'mysql2'
+gem 'oj'
 gem 'omniauth'
 gem 'omniauth-facebook'
 gem 'omniauth-github'
-gem 'oj'
 gem 'sidekiq'
 gem 'sinatra', require: false
 gem 'slim-rails'
+gem 'thinking-sphinx'
 gem 'whenever', require: false
 # gem 'skim'
 
