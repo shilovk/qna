@@ -16,7 +16,11 @@
 # end
 #
 every 1.day do
-  runner "DailyDigestJob.perform_now"
+  command 'cd /home/deployer/qna/current && bundle exec bin/rails runner -e production DailyDigestJob.perform_now'
+end
+
+every 60.minutes do
+  rake 'ts:index'
 end
 
 # Learn more: http://github.com/javan/whenever

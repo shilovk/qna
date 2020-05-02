@@ -45,7 +45,7 @@ gem 'oj'
 gem 'omniauth'
 gem 'omniauth-facebook'
 gem 'omniauth-github'
-gem 'sidekiq'
+gem 'sidekiq', '~> 5.0'
 gem 'sinatra', require: false
 gem 'slim-rails'
 gem 'thinking-sphinx'
