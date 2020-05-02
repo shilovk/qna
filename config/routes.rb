@@ -12,6 +12,8 @@ Rails.application.routes.draw do
 
   root to: 'questions#index'
 
+  mount ActionCable.server => '/cable'
+
   concern :commentable do
     resources :comments, only: %i[create update destroy], shallow: true
   end

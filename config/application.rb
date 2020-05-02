@@ -32,6 +32,6 @@ module Qna
     end
 
     config.action_cable.disable_request_forgery_protection = false
-    config.action_cable.mount_path = '/cable'
+    # config.action_cable.mount_path = '/cable'
   end
 end
