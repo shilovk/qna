@@ -19,7 +19,7 @@ every 1.day do
   command 'cd /home/deployer/qna/current && bundle exec bin/rails runner -e production DailyDigestJob.perform_now'
 end
 
-every 60.minutes do
+every 30.minutes do
   rake 'ts:index'
 end
 

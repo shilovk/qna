@@ -111,4 +111,16 @@ Rails.application.configure do
   # config.active_record.database_selector = { delay: 2.seconds }
   # config.active_record.database_resolver = ActiveRecord::Middleware::DatabaseSelector::Resolver
   # config.active_record.database_resolver_context = ActiveRecord::Middleware::DatabaseSelector::Resolver::Session
+
+  config.action_mailer.perform_caching = false
+  config.action_mailer.default_url_options = { host: 'qna.shilovk.ru'}
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address: Rails.application.credentials[:mail][:sendgrid][:address],
+    port: 2525,
+    domain: 'qna.shilovk.ru',
+    user_name: Rails.application.credentials[:mail][:sendgrid][:user_name],
+    password: Rails.application.credentials[:mail][:sendgrid][:password],
+    authentication: 'plain'
+  }
 end
