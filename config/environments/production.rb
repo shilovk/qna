@@ -43,7 +43,7 @@ Rails.application.configure do
   # Mount Action Cable outside main process or domain.
   # config.action_cable.mount_path = nil
   # config.action_cable.url = 'wss://example.com/cable'
-  config.action_cable.allowed_request_origins = [ 'http://qna.shilovk.ru', /http:\/\/qna.shilovk.*/ ]
+  config.action_cable.allowed_request_origins = ['http://qna.shilovk.ru', %r{http://qna.shilovk.*}]
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   # config.force_ssl = true
@@ -113,7 +113,7 @@ Rails.application.configure do
   # config.active_record.database_resolver_context = ActiveRecord::Middleware::DatabaseSelector::Resolver::Session
 
   config.action_mailer.perform_caching = false
-  config.action_mailer.default_url_options = { host: 'qna.shilovk.ru'}
+  config.action_mailer.default_url_options = { host: 'qna.shilovk.ru' }
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
     address: Rails.application.credentials[:mail][:sendgrid][:address],
