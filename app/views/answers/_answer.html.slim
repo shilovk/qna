@@ -1,38 +1,39 @@
 - if answer.persisted?
-  div id="answer-#{answer.id}"
-    .answer-errors
+  - cache [answer, current_user || 'guest'] do
+    div id="answer-#{answer.id}"
+      .answer-errors
 
-    p
-      - if answer.best
-        b Best answer
+      p
+        - if answer.best
+          b Best answer
 
-      - elsif can? :best, answer
-        = link_to 'Set the best', best_answer_path(answer), id: "best-answer-#{answer.id}", remote: true, method: :patch
+        - elsif can? :best, answer
+          = link_to 'Set the best', best_answer_path(answer), id: "best-answer-#{answer.id}", remote: true, method: :patch
 
-    = render 'shared/vote', resource: answer
+      = render 'shared/vote', resource: answer
 
-    p
-      = answer.body
+      p
+        = answer.body
 
-    = render 'shared/show_files', files: answer.files
+      = render 'shared/show_files', files: answer.files
 
-    = render 'shared/show_links', links: answer.links
+      = render 'shared/show_links', links: answer.links
 
-    - if can? :update, answer
-      => link_to 'Edit answer', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
+      - if can? :update, answer
+        => link_to 'Edit answer', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
 
-      = form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|
-        = f.label :body, 'Change answer'
-        = f.text_area :body
-        = f.label :files
-        = f.file_field :files, multiple: true, direct_upload: true
-        = render 'shared/add_links', record: f
-        = f.submit 'Save answer'
+        = form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|
+          = f.label :body, 'Change answer'
+          = f.text_area :body
+          = f.label :files
+          = f.file_field :files, multiple: true, direct_upload: true
+          = render 'shared/add_links', record: f
+          = f.submit 'Save answer'
 
-    - if can? :destroy, answer
-      = link_to 'Delete answer',
-                answer_path(answer),
-                method: :delete,
-                data: { confirm: 'Are you sure?' }, remote: true
+      - if can? :destroy, answer
+        = link_to 'Delete answer',
+                  answer_path(answer),
+                  method: :delete,
+                  data: { confirm: 'Are you sure?' }, remote: true
 
-    = render 'comments/comments', resource: answer
+      = render 'comments/comments', resource: answer
